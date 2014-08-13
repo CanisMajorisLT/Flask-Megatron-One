@@ -1,0 +1,79 @@
+<div class="form-inline bg-success " id="outer">
+
+        <form id="search" method="post" action="{{ url_for('main') }}">
+
+
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="Location">{{ Location }} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    {% for city in cities %}
+                  <li><input type="checkbox" id="{{ city }}" name='{{ city }}'><label for="{{ city }}">{{ city }}</label></li>
+                    {% endfor %}
+
+                        <!-- Other items -->
+                </ul>
+            </div>
+
+
+
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="Industry">{{ Industry }} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                   {% for industry in industries %}
+                  <li><input type="checkbox" id="{{ industry }}" name='{{ industry }}'><label for="{{ industry }}">{{ industry }}</label></li>
+                   {% endfor %}
+
+                        <!-- Other items -->
+                </ul>
+            </div>
+
+
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="Database">{{ Database }} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><input type="checkbox" id="c1" name="CVO"><label for="c1">CVOnline</label></li>
+                  <li><input type="checkbox" id="c2" name="CVB"><label for="c2">CVBankas</label></li>
+
+                </ul>
+            </div>
+
+
+
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="More options">{{ More_options }} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><input type="checkbox" id="belekas" name="belekas"><label for="belekas">belekas</label></li>
+                  <li><input type="checkbox" id="belekas" name="belekas"><label for="belekas">Darbo patirties sritis></label></li>
+
+
+                </ul>
+            </div>
+
+
+
+
+
+            <div class="input-group">
+                <input type=text class="form-control" placeholder={{ Keywords }} name=kwrds required>
+            </div>
+
+
+            <div class="input-group">
+                <input type="number" class="form-control" placeholder={{ cvold }} name="CVold" id="cvold">
+            </div>
+
+
+            <button class="btn btn-primary" type={{ type }} id={{ id }} data-action="search"><span class="glyphicon glyphicon-zoom-in"></span> <span id="text-search">{{ Search }}</span> </button>
+
+
+        </form>
+
+<br>
+
+</div>
+
+<div id="wrap">{{ results | safe }}</div>
+
+<script>
+    {{ noice_js | safe }}
+</script>

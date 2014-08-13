@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Megatron-One</title>
+
+    <!-- Bootstrap -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/dropdown-enhancement.css') }}" rel="stylesheet" type="text/css">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dropdown-enhancement.js') }}"></script>
+
+   <script src="{{ url_for('static', filename='jQuery.mmenu-master/src/js/jquery.mmenu.min.all.js') }}" type="text/javascript"></script>
+   <link href="{{ url_for('static', filename='jQuery.mmenu-master/src/css/jquery.mmenu.all.css') }}" type="text/css" rel="stylesheet" />
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+ <body>
+
+
+<div class="allcontents">
+
+<div class="form-inline bg-success " id="outer">
+
+        <form id="add_query" method="post" action="{{ url_for('main') }}">
+
+
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="Location">{{ Location }} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    {% for city in cities %}
+                  <li><input type="checkbox" id="{{ city }}" name='{{ city }}'><label for="{{ city }}">{{ city }}</label></li>
+                    {% endfor %}
+
+                        <!-- Other items -->
+                </ul>
+            </div>
+
+
+
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="Industry">{{ Industry }} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                   {% for industry in industries %}
+                  <li><input type="checkbox" id="{{ industry }}" name='{{ industry }}'><label for="{{ industry }}">{{ industry }}</label></li>
+                   {% endfor %}
+
+                        <!-- Other items -->
+                </ul>
+            </div>
+
+
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="Database">{{ Database }} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><input type="checkbox" id="c1" name="CVO"><label for="c1">CVOnline</label></li>
+                  <li><input type="checkbox" id="c2" name="CVB"><label for="c2">CVBankas</label></li>
+
+                </ul>
+            </div>
+
+
+
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="More options">{{ More_options }} <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><input type="checkbox" id="belekas" name="belekas"><label for="belekas">belekas</label></li>
+                  <li><input type="checkbox" id="belekas" name="belekas"><label for="belekas">Darbo patirties sritis></label></li>
+
+
+                </ul>
+            </div>
+
+
+
+
+
+            <div class="input-group">
+                <input type=text class="form-control" placeholder={{ Keywords }} name=kwrds required>
+            </div>
+
+
+            <div class="input-group">
+                <input type="number" class="form-control" placeholder={{ cvold }} name="CVold" id="cvold">
+            </div>
+
+
+            <button class="btn btn-primary" type={{ type }} id={{ id }} data-action="search"><span class="glyphicon glyphicon-zoom-in"></span> <span id="text-search">{{ Search }}</span> </button>
+
+
+        </form>
+
+<br>
+
+</div>
+
+<div id="wrap">{{ results | safe }}</div>
+
+</div>
+
+
+
+<div id="floatingCirclesG">
+    <div class="f_circleG" id="frotateG_01">
+    </div>
+    <div class="f_circleG" id="frotateG_02">
+    </div>
+    <div class="f_circleG" id="frotateG_03">
+    </div>
+    <div class="f_circleG" id="frotateG_04">
+    </div>
+    <div class="f_circleG" id="frotateG_05">
+    </div>
+    <div class="f_circleG" id="frotateG_06">
+    </div>
+    <div class="f_circleG" id="frotateG_07">
+    </div>
+    <div class="f_circleG" id="frotateG_08">
+    </div>
+</div>
+
+
+
+
+<nav id="my-menu">
+   <ul>
+      <li><a id="nav-search" href='?search=on'>Search</a></li>
+      <li><a id="nav-newquery" href='/'>New Query</a></li>
+      <li>
+         <a href="#">Queries</a>
+         <ul id="qries">
+             {% for q in queries %}
+            <li><a class="existing_queries" id="{{ q.id }}" href="?query={{ q.id }}">{{ q.date_added.strftime("%Y-%m-%d") }} <b>{{ q.kwrds }}</b> {{ q.city }} {{ q.industry }}</a></li>
+             {% endfor %}
+         </ul>
+      </li>
+      <li><a href={{ url_for('logout') }}>Logout</a></li>
+   </ul>
+</nav>
+
+
+
+<a id="hamburger" class="mm-fixed-top" href="#menu"><span></span></a>
+
+
+
+
+<script>
+
+    {{ noice_js | safe }}
+
+   $(document).ready(function() {
+      $("#my-menu").mmenu();
+      $('#hamburger').on('click', function(){
+          $('#my-menu').trigger('open.mm')
+      })
+   });
+
+   $(document).ready(function () {
+    var top = $('#hamburger').offset().top - parseFloat($('#hamburger').css('marginTop').replace(/auto/, 0));
+    $(window).scroll(function (event) {
+        var y = $(this).scrollTop();
+        //if y > top, it means that if we scroll down any more, parts of our element will be outside the viewport
+        //so we move the element down so that it remains in view.
+        if (y >= top) {
+           var difference = y - top;
+           $('#sidebar').css("top",difference);
+       }
+   });
+});
+
+//  CV viewed functions //
+(function(){
+
+    $('.allcontents').on('click','input.cvread', function(){
+        var $this = $(this);
+        var input = $this.attr('name');
+        var dataid = $this.attr('data-id');
+
+        if ($('td.'+input).hasClass('cvcheck')) {
+            $('td.'+input).removeClass('cvcheck');
+            viewed('False', dataid)
+        }
+        else {
+            viewed('True', dataid);
+           $('td.'+input).addClass('cvcheck');
+        }
+
+        function viewed(is, id){
+            $.ajax({
+            type:"POST",
+            encoding:"UTF-8",
+            url: "{{ url_for('update') }}",
+            data: JSON.stringify({'url':$('td.'+input).text(), 'viewed': is, 'id':id}),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+    }
+        });
+        }
+    });
+
+})();
+
+(function(){
+    $('.allcontents').on('mousedown','a.cvurl', function(){
+        var $this = $(this);
+        var input = $this.parent().attr('data-box');
+        var dataid = $this.parent().attr('data-id');
+        $this.mouseup(function(){
+            if (!$this.parent().hasClass('cvcheck')) {
+                $this.parent().addClass('cvcheck');
+                $("input.cvread[name*='$in']".replace('$in', input)).prop('checked', true);
+                viewed('True', $this.text(), dataid)
+            }
+        })
+    });
+
+
+        function viewed(is, input, id){
+         $.ajax({
+         type:"POST",
+         encoding:"UTF-8",
+         url: "{{ url_for('update') }}",
+         data: JSON.stringify({'url':input, 'viewed': is, 'id':id}),
+         contentType: 'application/json;charset=UTF-8',
+         success: function(result) {
+    }
+        });
+        }
+
+
+})();
+//  CV viewed functions //
+
+//  CV follow functions //
+(function(){
+
+    $('.allcontents').on('click','input.cvfollow', function(){
+        var $this = $(this);
+        var dataid = $this.attr('data-id');
+
+        if ($this.hasClass('following')) {
+            follow('False', dataid);
+            $this.removeClass('following');
+        }
+        else {
+            $this.addClass('following');
+            follow('True', dataid);
+        }
+
+        function follow(is, id){
+            $.ajax({
+            type:"POST",
+            encoding:"UTF-8",
+            url: "{{ url_for('update') }}",
+            data: JSON.stringify({'follow': is, 'id':id}),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+    }
+        });
+        }
+    });
+
+})();
+//  CV follow functions //
+
+ (function(){
+
+    $('.allcontents').on('submit', 'form[id="add_query"]', function(e){
+        e.preventDefault();
+        var loader = $('#floatingCirclesG');
+        loader.show();
+
+        var data = $(this).serialize();
+        var $wrap = $('#wrap');
+
+        $('button[data-toggle="dropdown"]').attr('disabled', 'disabled');
+        $(".form-control").attr('disabled', 'disabled');
+
+        $.ajax({
+            type:"POST",
+            encoding:"UTF-8",
+            url: "{{ url_for('result') }}",
+            data: JSON.stringify(data),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+                loader.hide();
+                $('#text-search').text('Update');
+                $('#search').removeAttr('type')
+                                    .attr('type', 'button')
+                                    .attr('id', 'update');
+
+                $wrap.append(result.data);
+                $wrap.fadeIn()
+
+
+    }
+        });
+    })
+
+ })();
+
+(function(){
+
+    $('.allcontents').on('submit', 'form[id="search"]', function(e){
+        e.preventDefault();
+
+        var loader = $('#floatingCirclesG');
+        var data = $(this).serialize();
+        var $wrap = $('#wrap');
+
+        $wrap.empty()
+              .hide();
+        loader.show();
+
+        $.ajax({
+            type:"POST",
+            encoding:"UTF-8",
+            url: "{{ url_for('search') }}",
+            data: JSON.stringify(data),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+                loader.hide();
+                $('#text-search').text('New search');
+                $wrap.append(result.data);
+                $wrap.fadeIn()
+
+
+    }
+        });
+    })
+
+ })();
+
+(function(){
+
+    $('.allcontents').on('click', 'button[id="update"]', function(e){
+       e.preventDefault();
+       console.log('k');
+       var id = $('.table').attr('data-query_id');
+       var loader = $('#floatingCirclesG');
+       var $wrap = $('#wrap');
+        $wrap.empty()
+             .hide();
+
+        loader.show();
+
+        $.ajax({
+            type:"POST",
+            encoding:"UTF-8",
+            url: "{{ url_for('update') }}",
+            data: JSON.stringify({'query_id': id}),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+                loader.hide();
+                $wrap.append(result.data);
+                $wrap.fadeIn()
+
+
+    }
+        });
+    })
+
+ })();
+
+
+
+
+
+(function(){
+
+    $('nav').on('click', 'a[id="nav-search"]', function(e){
+        e.preventDefault();
+        var loader = $('#floatingCirclesG');
+        var maindiv = $('.allcontents');
+        maindiv.empty()
+               .hide();
+        loader.show();
+
+        $.ajax({
+            type:"GET",
+            encoding:"UTF-8",
+            url: "{{ url_for('search') }}",
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+
+                loader.delay(1000).hide();
+                maindiv.append(result.data)
+                        .fadeIn("slow");
+
+    }
+        });
+    })
+
+ })();
+
+(function(){
+
+    $('nav').on('click', 'a[class="existing_queries"]', function(e){
+        e.preventDefault();
+        var data = $(this).attr('id');
+        var loader = $('#floatingCirclesG');
+        var maindiv = $('.allcontents');
+        maindiv.empty()
+               .hide();
+        loader.show();
+
+
+
+
+
+        $.ajax({
+            type:"POST",
+            encoding:"UTF-8",
+            data: JSON.stringify(data),
+            url: "{{ url_for('display') }}",
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+
+                loader.delay(1000).hide();
+                $body.removeClass("loading");
+                maindiv.append(result.data)
+                        .fadeIn("slow");
+                $('#wrap').fadeIn()
+    }
+        });
+    })
+
+ })();
+
+</script>
+
+
+
+  </body>
+</html>

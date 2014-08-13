@@ -1,0 +1,375 @@
+.form-signin
+{
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.form-signin .form-signin-heading, .form-signin .checkbox
+{
+    margin-bottom: 10px;
+}
+.form-signin .checkbox
+{
+    font-weight: normal;
+}
+.form-signin .form-control
+{
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.form-signin .form-control:focus
+{
+    z-index: 2;
+}
+.form-signin input[type="text"]
+{
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"]
+{
+    margin-bottom: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.form-signin input[type="password1"]
+{
+    margin-bottom: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.account-wall
+{
+    margin-top: 20px;
+    padding: 40px 0px 20px 0px;
+    background-color: #f7f7f7;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+.login-title
+{
+    color: #555;
+    font-size: 18px;
+    font-weight: 400;
+    display: block;
+}
+.profile-img
+{
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+.need-help
+{
+    margin-top: 10px;
+}
+.new-account
+{
+    display: block;
+    margin-top: 10px;
+}
+
+div#outer {
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -moz-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -moz-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      height: 10em;
+      width: 65em;
+      margin: auto;
+    }
+
+.btn-circle {
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    padding: 3px 0;
+    font-size: 8px;
+    line-height: 1.228571429;
+    border-radius: 4px;
+}
+
+.cvcheck {
+    text-decoration: line-through;
+}
+
+body {
+    background-color: lightgray;
+
+}
+
+div#wrap {
+    height: 500px;
+    width: 850px;
+    margin: auto;
+    display: none;
+
+}
+
+
+
+#floatingCirclesG{
+position:relative;
+width:128px;
+height:128px;
+-moz-transform:scale(0.6);
+-webkit-transform:scale(0.6);
+-ms-transform:scale(0.6);
+-o-transform:scale(0.6);
+transform:scale(0.6);
+    display: none;
+    margin: auto;
+}
+
+.f_circleG{
+position:absolute;
+background-color:#FFFFFF;
+height:23px;
+width:23px;
+-moz-border-radius:12px;
+-moz-animation-name:f_fadeG;
+-moz-animation-duration:0.96s;
+-moz-animation-iteration-count:infinite;
+-moz-animation-direction:linear;
+-webkit-border-radius:12px;
+-webkit-animation-name:f_fadeG;
+-webkit-animation-duration:0.96s;
+-webkit-animation-iteration-count:infinite;
+-webkit-animation-direction:linear;
+-ms-border-radius:12px;
+-ms-animation-name:f_fadeG;
+-ms-animation-duration:0.96s;
+-ms-animation-iteration-count:infinite;
+-ms-animation-direction:linear;
+-o-border-radius:12px;
+-o-animation-name:f_fadeG;
+-o-animation-duration:0.96s;
+-o-animation-iteration-count:infinite;
+-o-animation-direction:linear;
+border-radius:12px;
+animation-name:f_fadeG;
+animation-duration:0.96s;
+animation-iteration-count:infinite;
+animation-direction:linear;
+}
+
+#frotateG_01{
+left:0;
+top:52px;
+-moz-animation-delay:0.36s;
+-webkit-animation-delay:0.36s;
+-ms-animation-delay:0.36s;
+-o-animation-delay:0.36s;
+animation-delay:0.36s;
+}
+
+#frotateG_02{
+left:15px;
+top:15px;
+-moz-animation-delay:0.48s;
+-webkit-animation-delay:0.48s;
+-ms-animation-delay:0.48s;
+-o-animation-delay:0.48s;
+animation-delay:0.48s;
+}
+
+#frotateG_03{
+left:52px;
+top:0;
+-moz-animation-delay:0.6s;
+-webkit-animation-delay:0.6s;
+-ms-animation-delay:0.6s;
+-o-animation-delay:0.6s;
+animation-delay:0.6s;
+}
+
+#frotateG_04{
+right:15px;
+top:15px;
+-moz-animation-delay:0.72s;
+-webkit-animation-delay:0.72s;
+-ms-animation-delay:0.72s;
+-o-animation-delay:0.72s;
+animation-delay:0.72s;
+}
+
+#frotateG_05{
+right:0;
+top:52px;
+-moz-animation-delay:0.84s;
+-webkit-animation-delay:0.84s;
+-ms-animation-delay:0.84s;
+-o-animation-delay:0.84s;
+animation-delay:0.84s;
+}
+
+#frotateG_06{
+right:15px;
+bottom:15px;
+-moz-animation-delay:0.96s;
+-webkit-animation-delay:0.96s;
+-ms-animation-delay:0.96s;
+-o-animation-delay:0.96s;
+animation-delay:0.96s;
+}
+
+#frotateG_07{
+left:52px;
+bottom:0;
+-moz-animation-delay:1.08s;
+-webkit-animation-delay:1.08s;
+-ms-animation-delay:1.08s;
+-o-animation-delay:1.08s;
+animation-delay:1.08s;
+}
+
+#frotateG_08{
+left:15px;
+bottom:15px;
+-moz-animation-delay:1.2s;
+-webkit-animation-delay:1.2s;
+-ms-animation-delay:1.2s;
+-o-animation-delay:1.2s;
+animation-delay:1.2s;
+}
+
+@-moz-keyframes f_fadeG{
+0%{
+background-color:#000000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+@-webkit-keyframes f_fadeG{
+0%{
+background-color:#000000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+@-ms-keyframes f_fadeG{
+0%{
+background-color:#000000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+@-o-keyframes f_fadeG{
+0%{
+background-color:#000000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+@keyframes f_fadeG{
+0%{
+background-color:#000000}
+
+100%{
+background-color:#FFFFFF}
+
+}
+
+
+
+
+
+
+#hamburger
+{
+	display: block;
+	width: 40px;
+	height: 36px;
+	margin: 20px;
+	position: fixed;
+	z-index: 2;
+}
+#hamburger:before,
+#hamburger:after,
+#hamburger span
+{
+	background: #fff;
+	content: '';
+	display: block;
+	width: 30px;
+	height: 6px;
+	position: absolute;
+	left: 5px;
+}
+#hamburger:before
+{
+	top: 5px;
+}
+#hamburger:after
+{
+	bottom: 5px;
+}
+#hamburger span
+{
+	top: 50%;
+	margin-top: -3px;
+}
+
+@media all and (min-width: 1430px)
+{
+	#hamburger {
+		display: none;
+	}
+}
+
+/* Hamburger animation */
+#hamburger:before,
+#hamburger:after,
+#hamburger span
+{
+	transition: none 0.5s ease 0.5s;
+	transition-property: transform, top, bottom, left, opacity;
+}
+html.mm-opening #hamburger span
+{
+	left: -50px;
+	opacity: 0;
+}
+html.mm-opening #hamburger:before
+{
+	transform: rotate( 45deg );
+	top: 15px;
+}
+html.mm-opening #hamburger:after
+{
+	transform: rotate( -45deg );
+	bottom: 15px;
+}
+
+
+#cvold {
+    width: 75px;
+}
+
+
