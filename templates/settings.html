@@ -1,0 +1,181 @@
+
+<div id="settings" class="col-md-offset-3 col-md-5">
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+  <li class="active"><a href="#cvb" role="tab" data-toggle="tab">CV Bankas</a></li>
+  <li><a href="#cvo" role="tab" data-toggle="tab">CV Online</a></li>
+  <li><a href="#messages" role="tab" data-toggle="tab">Linkedin</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane fade in active" id="cvb">
+
+       <div class="row">
+                                    <div class="col-md-6 col-md-offset-3">
+                                    <form class="cvb" id="profileForm">
+                                        <input class="hidden" name="website" type="text" value="cvbankas"/>
+                                        <div class="form-group">
+                                            <label>Username</label>
+                                            <input type="text" class="form-control" name="username" value="{{ cvb_acc }}" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Password</label>
+                                            <input type="password" class="form-control" name="password" value="{{ cvb_pss }}" />
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3 ">
+                                        <button class="btn btn-default" type="submit">Save</button>
+                                            </div>
+                                            <div class="col-md-9">
+                                        <div id="success-cvb" class="alert alert-success hidden" role="alert">Success!</div>
+                                        <div id="warning-cvb" class="alert alert-warning hidden" role="alert">Invalid :(</div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    </div>
+                                    </div>
+
+
+
+
+  </div>
+  <div class="tab-pane fade" id="cvo">
+
+          <div class="row">
+                                    <div class="col-md-6 col-md-offset-3">
+                                    <form class="cvo" id="profileForm">
+                                        <input class="hidden" name="website" type="text" value="cvonline"/>
+                                        <div class="form-group">
+                                            <label>Username</label>
+                                            <input type="text" class="form-control" name="username" value="{{ cvo_acc }}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Password</label>
+                                            <input type="password" class="form-control" name="password" value="{{ cvo_pss }}"/>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                        <button class="btn btn-default" type="submit">Save</button>
+                                            </div>
+                                            <div class="col-md-9">
+                                        <div id="success-cvo" class="alert alert-success hidden" role="alert">Success!</div>
+                                        <div id="warning-cvo" class="alert alert-warning hidden" role="alert">Invalid :(</div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    </div>
+                                    </div>
+
+  </div>
+  <div class="tab-pane fade" id="messages">Soon</div>
+</div>
+</div>
+
+
+<script>
+
+$(document).ready(function() {
+    $('.cvb')
+       .bootstrapValidator({
+        message: 'lulwut',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            username: {
+                validators: {
+                    notEmpty: {
+                        message: 'Username is required'
+                    }
+                }
+            },
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required'
+                    }
+                }
+            },
+            website: {}
+        }
+    })
+    .on('success.form.bv', function(e) {
+                e.preventDefault();
+                $this = $(this);
+
+                console.log('d');
+                $.ajax({
+                    type:"POST",
+                    encoding:"UTF-8",
+                    url: "{{ url_for('settings') }}",
+                    data: JSON.stringify($this.serialize()),
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function(result) {
+                        if (result.response == 'True') {
+                            $('#success-cvb').removeClass('hidden')                        }
+                        else {
+                            $('#warning-cvb').removeClass('hidden')
+                        }
+
+            }
+                });
+        })
+});
+
+
+$(document).ready(function() {
+    $('.cvo')
+       .bootstrapValidator({
+        message: 'lulwut',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            username: {
+                validators: {
+                    notEmpty: {
+                        message: 'Username is required'
+                    }
+                }
+            },
+            password: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required'
+                    }
+                }
+            },
+            website: {}
+        }
+    })
+    .on('success.form.bv', function(e) {
+                e.preventDefault();
+                $this = $(this);
+
+                console.log('z');
+                $.ajax({
+                    type:"POST",
+                    encoding:"UTF-8",
+                    url: "{{ url_for('settings') }}",
+                    data: JSON.stringify($this.serialize()),
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function(result) {
+                        if (result.response == 'True') {
+                            $('#success-cvo').removeClass('hidden')                        }
+                        else {
+                            $('#warning-cvo').removeClass('hidden')
+                        }
+
+            }
+                });
+        })
+});
+
+
+
+</script>

@@ -28,25 +28,21 @@ industries = ['Visos sritys', 'Administravimas/sekretoriavimas', 'Apsauga', 'Aps
 
 #######################################################################################################################
 
-# make a formated date of today
+#### make a formatted date of today ###
 date_today_0 = [int (x) for x in datetime.datetime.now().strftime("%Y-%m-%d").split('-')]
 date_today_1 = datetime.date(date_today_0[0], date_today_0[1], date_today_0[2])
+#### make a formatted date of today ###
 
 
-link_login = 'http://www.cvbankas.lt/login.php'
-link_search = 'http://www.cvbankas.lt/darbuotoju-paieska?page={}#rezults_a'
+def func01_cvb(query_info, user, days_limit = 19):
 
-login_data = {'uname':'cv@hrm.lt', 'pass':'greblys'}
-search_data = {'action':1,'miestas':'', 'patirt_sritis[]':'Kompiuteriai/IT/internetas', 'search_string':'php'}
+    login_link = 'http://www.cvbankas.lt/login.php'
+    query_link = 'http://www.cvbankas.lt/darbuotoju-paieska?page={}#rezults_a'
 
-
-def func01_cvb(login_data, query_info, login_link, query_link, days_limit = 19):
+    login_data = {'uname':user.cvb_usr, 'pass': user.cvb_pss}
 
     list_of_cv_links = []
     query_data = []
-
-    def get_stuff_from_db(query_data):
-        pass
 
     with requests.Session() as s:
         s.post(login_link, data=login_data)
@@ -107,6 +103,14 @@ def func01_cvb(login_data, query_info, login_link, query_link, days_limit = 19):
     return query_data
 
 
+
+def validate_cvb_login(acc, pss):
+    login_data = {'uname': acc, 'pass': pss}
+    log = requests.post('http://www.cvbankas.lt/login.php', data=login_data)
+    if log.url == 'http://www.cvbankas.lt/mano-skelbimu-sarasas.html':
+        return "True"
+    else:
+        return "False"
 
 
 

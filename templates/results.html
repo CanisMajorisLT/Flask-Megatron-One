@@ -6,7 +6,7 @@
         <tr>
           <th>#</th>
           <th>CV Link {{ cv[0] }}</th>
-          <th><button class="btn btn-default btn-sm" id="hideviews">Viewed</button></th>
+          <th><button class="btn btn-default btn-sm hideviews">Viewed</button></th>
           <th>Save</th>
           <th>Follow</th>
         </tr>
@@ -19,7 +19,7 @@
           <td>{{ loop.index }} {% if cvs[7] %}!{% endif %}</td>
           <td data-id="{{ cvs[5] }}" data-box="{{ firstloop.index }}{{ loop.index }}" class="{{ firstloop.index }}{{ loop.index }}  {% if cvs[3] == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cvs[1] }}" data-html="true" target="_blank" href="{{ cvs[0] }}">{{ cvs[0] }}</a></td>
           <td><input data-id="{{ cvs[5] }}" class="cvread"  type="checkbox" name="{{ firstloop.index }}{{ loop.index }}" {% if cvs[3] == True %} checked {% endif %}/></td>
-          <td><input data-id="{{ cvs[5] }}" class="cvsave"  type="checkbox" {% if cvs[6] == True %} checked {% endif %}/></td>
+          <td><button data-id="{{ cvs[5] }}" class="btn btn-primary btn-sm" data-md="true" {% if cvs[6] == True %} checked {% endif %}></button></td>
           <td><input data-id="{{ cvs[5] }}" class="checkbox cvfollow {% if cvs[4] == True %} following {% endif %}" type="checkbox" {% if cvs[4] == True %} checked {% endif %}/></td>
         </tr>
         {% endfor %}
@@ -39,16 +39,19 @@
 
  </table>
 
+
+
     <script>
 
     $(document).ready(function() {
-      $('[data-toggle=tooltip]').tooltip()
+      $('[data-toggle=tooltip]').tooltip();
+      $('[data-toggle=popover]').popover()
     });
 
     $(document).ready(function() {
 
 
-        $('#hideviews').on('click', function(){
+        $('.hideviews').on('click', function(){
             var cvs = $('td.cvcheck').parent();
             if (cvs.hasClass('hidden')){
                 cvs.removeClass('hidden')
@@ -61,6 +64,13 @@
 
         })
     });
+
+    $(document).ready(function() {
+      $('[data-toggle=tooltip]').tooltip();
+      $('[data-toggle=popover]').popover()
+    });
+
+
 
     </script>
 

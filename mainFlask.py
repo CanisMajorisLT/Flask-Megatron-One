@@ -1,11 +1,12 @@
-
+#!/usr/local/bin/python3.4
 from flask import Flask, g, request, render_template, url_for, session, flash,redirect, jsonify, abort
 from mainCVB import cities, industries
-from router import recognize_dat_data_and_find_cvs, somejs
+from router import recognize_dat_data_and_find_cvs, somejs, validate_logins
 import urllib, datetime,os, json
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user
-from sqlalchemy import desc
+from flask.ext.cache import Cache
+from mainCatsone import cats_api
 
 
 
@@ -15,9 +16,10 @@ app.config.update(dict(
     SECRET_KEY="soseceret",
     DEBUG=True,
     #DATABASE=os.path.join(app.root_path, 'schema.db')
-    SQLALCHEMY_DATABASE_URI='sqlite:///'+ os.path.join(app.root_path, 'Database4.db')
+    SQLALCHEMY_DATABASE_URI='sqlite:///'+ os.path.join(app.root_path, 'Database5.db')
 ))
 
+cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 
 lm = LoginManager()
 lm.init_app(app)
@@ -34,9 +36,46 @@ def main():
 
     user = g.user
     queries = Queries.query.filter_by(user_name=user.email).all()
-    mainpage_html_data['queries'] = queries
+    mainpage_html_data['queries'] = render_template('renderqueries.html', queries=queries)
 
     return render_template('mainpage.html', **mainpage_html_data)
+
+@app.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    user=g.user
+    render_data = {'cvb_acc': user.cvb_usr, "cvb_pss": '', "cvo_acc": user.cvo_usr, "cvo_pss": ''}
+    if request.method == "GET":
+        return jsonify({'data': render_template('settings.html', **render_data)})
+    if request.method == "POST":
+        data_0 = urllib.parse.unquote(request.get_json())
+        data = dict(a.split('=') for a in data_0.split('&'))
+        response = validate_logins(data['website'], data['username'], data['password'])
+        if "True" in response and 'cvo' in response:
+            print('cvo')
+            user.cvo_usr = data['username']
+            user.cvo_pss = data['password']
+        elif "True" in response and 'cvb' in response:
+            print('cvb:(')
+            user.cvb_usr = data['username']
+            user.cvb_pss = data['password']
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({'response': response[0]})
+
+
+@app.route('/modal', methods=['POST'])
+@login_required
+def modal():
+    cats = cats_api('fb28effc75c37f025e1a57fde616267b')
+    data = request.get_json()
+    if 'get' in data:
+        job_orders, lists = get_lists_and_joborders(cats)
+        return jsonify({'data': render_template('modal.html', joborders=job_orders, lists=lists, cv_id=data['get'])})
+    else:
+        data_dict = parse_json(data['form_data'])
+        print(data_dict)
+        return jsonify({'a':4})
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -51,7 +90,7 @@ def search():
         n = urllib.parse.unquote(request.get_json())
         m = dict(a.split('=') for a in n.split('&'))
         print('search {}'.format(m))
-        result = recognize_dat_data_and_find_cvs(m, query_data=False)
+        result = recognize_dat_data_and_find_cvs(m, g.user, query_data=False)
         return jsonify({'data': render_template('results.html', queries_data=result)})
 
 @app.route('/displayquery',methods=['GET', 'POST'])
@@ -117,20 +156,24 @@ def display():
             one_url.append(one_data.save_to_cats)
             one_url.append(one_data.hot)
 
-
-
-            queries_data_list_1.append(one_url)
+            #make HOT CVs appear at the top
+            if one_url[7] is True:
+                queries_data_list_1.insert(0, one_url)
+            else:
+                queries_data_list_1.append(one_url)
 
         queries_data_list_2.append(queries_data_list_1)
         queries_data_list_3.append(queries_data_list_2)
 
-        mainpage_html_data['results'] = render_template('results.html', queries_data=queries_data_list_3, query_id=query_id)
+        mainpage_html_data['results'] = render_template('results.html', queries_data=queries_data_list_3,
+                                                        query_id=query_id)
 
     get_query(one_query)
 
     # when redirected on first search of the query..
     if is_first_query:
-        return jsonify({'data': mainpage_html_data['results']})
+        queries = render_template('renderqueries.html', queries=Queries.query.filter_by(user_name=user.email).all())
+        return jsonify({'data': mainpage_html_data['results'], 'queries': queries})
 
     return jsonify({'data': render_template('search.html', **mainpage_html_data)})
 
@@ -141,9 +184,8 @@ def result():
     n = urllib.parse.unquote(request.get_json())
     m = dict(a.split('=') for a in n.split('&'))
     print('/result{}: '.format(m))
-    result, city, industry, kwrds, cvold = recognize_dat_data_and_find_cvs(m, query_data=True)
+    result, city, industry, kwrds, cvold = recognize_dat_data_and_find_cvs(m, g.user, query_data=True)
     query_id = make_query_and_url_db_data(g.user, city, industry, kwrds, cvold, result, return_=True)
-    #session['query_id'] = query_id
     return redirect(url_for('display', query=query_id, first=True))
 
     #return jsonify({'data': render_template('results.html', queries_data=result)})
@@ -174,7 +216,7 @@ def update():
         query_id = data['query_id']
         old_urls = Url_data.query.filter_by(cv_query_id=query_id).all()
         query_class = Queries.query.filter_by(id=query_id).first()
-        today_urls = recognize_dat_data_and_find_cvs(make_query_dictionary(query_class))
+        today_urls = recognize_dat_data_and_find_cvs(make_query_dictionary(query_class), g.user)
         check_for_new_urls(old_urls, today_urls, query_class)
         return redirect(url_for('display', query=query_id, first=False))
 
@@ -183,9 +225,8 @@ def update():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    error=None
+    error = None
     if request.method == 'GET':
-        print('hi1')
         return render_template('login.html', error=error)
 
     usr = User.query.filter_by(email=request.form['email'], password=request.form['password']).first()
@@ -257,6 +298,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     password = db.Column(db.String)
     email = db.Column(db.String(120), unique=True)
+
+    cvo_usr = db.Column(db.String, default='')
+    cvo_pss = db.Column(db.String, default='')
+
+    cvb_usr = db.Column(db.String, default='')
+    cvb_pss = db.Column(db.String, default='')
 
     def __init__(self, email, password):
         self.email = email
@@ -331,6 +378,17 @@ class Url_data(db.Model):
 
 ############### Functions###########################
 
+def parse_json(data):
+    data_0 = urllib.parse.unquote(data)
+    return dict(a.split('=') for a in data_0.split('&'))
+
+@cache.cached(timeout=180, key_prefix='wtf')
+def get_lists_and_joborders(cats):
+    job_orders = cats.get_joborders()
+    lists = cats.get_lists()
+    return job_orders, lists
+
+
 def make_query_dictionary(q_class):
     q_dictionary = {'kwrds': q_class.kwrds, 'CVold': str(q_class.cv_old)}
     cities = q_class.city
@@ -364,8 +422,7 @@ def check_for_new_urls(old_urls, today_urls, query_class):
                         db.session.commit()
                     else:
                         pass
-    print(new_links)
-    print(today_urls)
+
     make_query_and_url_db_data(User.query.filter_by(email=query_class.user_name),
                                None, None, None, None,
                                new_links,

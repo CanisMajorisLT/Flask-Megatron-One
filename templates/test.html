@@ -9,36 +9,18 @@
     <link href="{{ url_for('static', filename='jQuery.mmenu-master/src/css/jquery.mmenu.all.css') }}" type="text/css" rel="stylesheet" />
 </head>
 <body>
-
-<div>
-    sup
-</div>
-
-<nav id="ladada">
-   <ul>
-      <li><a href="/">Home</a></li>
-      <li>
-         <a href="/about/">About us</a>
-         <ul>
-            <li><a href="/about/history/">History</a></li>
-            <li><a href="/about/team/">The team</a></li>
-            <li><a href="/about/address/">Our address</a></li>
-         </ul>
-      </li>
-      <li><a href="/contact/">Contact</a></li>
-   </ul>
-</nav>
-
-
+<div class="na">K</div>
+<textarea class="lol" name="nope" id="nope" cols="30" rows="10">:(</textarea>
+<textarea name="what" id="what" cols="30" rows="10"></textarea>
 
 <script>
 
        $(document).ready(function() {
-       $("#ladada").mmenu();
-       $.fn.mmenu.debug = function( msg ) {
-            console.log( msg );
-};
-
+        $('#what').keyup(function(){
+                   var niga = $('#what').val();
+                    $('.lol').val(niga);
+            $('.na').text(niga);
+        })
    });
 </script>
 

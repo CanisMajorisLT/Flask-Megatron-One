@@ -23,14 +23,13 @@ date_today_1 = datetime.date(date_today_0[0], date_today_0[1], date_today_0[2])
 
 
 
-login_data = {'username':'hrm-talent-lab-laura', 'password':'dramblys1', 'module': 'login'}
 
 
 search_data_2 = {'vaja_tagasi':1, 'otsing[toggle_show]':1, 'otsing[search_id]':1, 'valitud_change':0, 'desired_change':0, 'view_change':0, 'passiivne_change':0,'aktiivne_change':0}
 search_data_3 = {'CvList_id':0,'cvarv_cvlistis':25,'vaja_tagasi':1, 'otsing[search_id]':1, 'valitud_change':0, 'desired_change':0, 'view_change':0, 'passiivne_change':0,'aktiivne_change':0}
 
 
-def func01_cvo(query_string, login_data=login_data,  days_limit = 5, sritis=None, city=None):
+def func01_cvo(query_string, user,  days_limit = 5, sritis=None, city=None):
 
     ### links ##
     link_login = 'http://www.cvonline.lt/login'
@@ -42,6 +41,7 @@ def func01_cvo(query_string, login_data=login_data,  days_limit = 5, sritis=None
     ## data ##
     search_data = {'otsing[par1]':'.net', 'otsing[par2]':'AND', 'otsing[search_id]':1, 'otsing[function_ok]':1, 'otsing[function_id]':'query'}
     search_data['otsing[par1]'] = query_string
+    login_data = {'username': user.cvo_usr, 'password': user.cvo_pss, 'module': 'login'}
 
 
 
@@ -176,4 +176,12 @@ def ad_parser(obj, days_limit=20):
 
 
 
+def validate_cvo_login(acc, pss):
+    login_data = {'username': acc, 'password': pss, 'module': 'login'}
+    log = requests.post('http://www.cvonline.lt/login', data=login_data)
+    if log.url == 'http://www.cvonline.lt/login':
+
+        return "False"
+    else:
+        return "True"
 

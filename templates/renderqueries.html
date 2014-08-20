@@ -1,0 +1,3 @@
+{% for q in queries %}
+    <li><a class="existing_queries" id="{{ q.id }}" href="?query={{ q.id }}">{{ q.date_added.strftime("%Y-%m-%d") }} <b>{{ q.kwrds }}</b> {{ q.city }} {{ q.industry }}</a></li>
+{% endfor %}

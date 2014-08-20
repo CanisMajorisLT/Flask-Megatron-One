@@ -112,7 +112,7 @@ div#outer {
 }
 
 body {
-    background-color: lightgray;
+    background-color: #f5f5f5;
 
 }
 
@@ -373,3 +373,15 @@ html.mm-opening #hamburger:after
 }
 
 
+#profileForm .form-control-feedback {
+    top: 25px;
+    right: 0;
+}
+.tab-content > .active {
+  border: 1px solid #ddd;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-top: none;
+  background-color: #ffffff;
+  padding: 10px;
+}

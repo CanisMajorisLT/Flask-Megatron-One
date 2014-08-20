@@ -10,6 +10,8 @@
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ url_for('static', filename='css/dropdown-enhancement.css') }}" rel="stylesheet" type="text/css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css"/>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
@@ -18,6 +20,7 @@
 
    <script src="{{ url_for('static', filename='jQuery.mmenu-master/src/js/jquery.mmenu.min.all.js') }}" type="text/javascript"></script>
    <link href="{{ url_for('static', filename='jQuery.mmenu-master/src/css/jquery.mmenu.all.css') }}" type="text/css" rel="stylesheet" />
+   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js"></script>
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -136,26 +139,25 @@
 
 <nav id="my-menu">
    <ul>
-      <li><a id="nav-search" href='?search=on'>Search</a></li>
-      <li><a id="nav-newquery" href='/'>New Query</a></li>
       <li>
-         <a href="#">Queries</a>
+         <a href="#"><i class="fa fa-bars"></i> Queries</a>
          <ul id="qries">
-             {% for q in queries %}
-            <li><a class="existing_queries" id="{{ q.id }}" href="?query={{ q.id }}">{{ q.date_added.strftime("%Y-%m-%d") }} <b>{{ q.kwrds }}</b> {{ q.city }} {{ q.industry }}</a></li>
-             {% endfor %}
+            {{ queries | safe }}
          </ul>
       </li>
-      <li><a href={{ url_for('logout') }}>Logout</a></li>
+      <li><a id="nav-search" href='?search=on'><i class="fa fa-globe"></i> Search</a></li>
+      <li><a id="nav-newquery" href='/'><i class="fa fa-plus-square"></i> New Query</a></li>
+      <li><a id="nav-settings" href=''><i class="fa fa-gear"></i> Settings</a></li>
+      <li><a href={{ url_for('logout') }}><i class="fa fa-user"></i> Logout</a></li>
    </ul>
 </nav>
 
 
 
-<a id="hamburger" class="mm-fixed-top" href="#menu"><span></span></a>
+<a id="hamburger" class="mm-fixed-top" href="#"><span></span></a>
 
 
-
+<div id="modal"></div>
 
 <script>
 
@@ -302,6 +304,8 @@
                                     .attr('type', 'button')
                                     .attr('id', 'update');
 
+                $('#qries').empty()
+                           .append(result.queries);
                 $wrap.append(result.data);
                 $wrap.fadeIn()
 
@@ -408,6 +412,33 @@
 
 (function(){
 
+    $('nav').on('click', 'a[id="nav-settings"]', function(e){
+        e.preventDefault();
+        var loader = $('#floatingCirclesG');
+        var maindiv = $('.allcontents');
+        maindiv.empty()
+               .hide();
+        loader.show();
+
+        $.ajax({
+            type:"GET",
+            encoding:"UTF-8",
+            url: "{{ url_for('settings') }}",
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+
+                loader.delay(1000).hide();
+                maindiv.append(result.data)
+                        .fadeIn("slow");
+
+    }
+        });
+    })
+
+ })();
+
+(function(){
+
     $('nav').on('click', 'a[class="existing_queries"]', function(e){
         e.preventDefault();
         var data = $(this).attr('id');
@@ -430,13 +461,69 @@
             success: function(result) {
 
                 loader.delay(1000).hide();
-                $body.removeClass("loading");
                 maindiv.append(result.data)
                         .fadeIn("slow");
                 $('#wrap').fadeIn()
     }
         });
     })
+
+ })();
+
+
+(function(){
+
+    $('.allcontents').on('click', 'button[data-md="true"]', function(e){
+        e.preventDefault();
+        var data = $(this).attr('data-id');
+
+        $.ajax({
+            type:"POST",
+            encoding:"UTF-8",
+            data: JSON.stringify({'get': data}),
+            url: "{{ url_for('modal') }}",
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+                $('#modal').append(result.data);
+                $('#damodal').modal();
+    }
+        });
+    })
+
+ })();
+
+
+(function(){
+
+    $('#modal').on('click', 'button#submitmodal', function(e){
+        e.preventDefault();
+        console.log('Love');
+        var cv_id = $(this).attr('data-id');
+        var form_data = $('form').serialize();
+
+        $.ajax({
+            type:"POST",
+            encoding:"UTF-8",
+            data: JSON.stringify({'cv_id': cv_id, 'form_data': form_data}),
+            url: "{{ url_for('modal') }}",
+            contentType: 'application/json;charset=UTF-8',
+            success: function(result) {
+                $('#damodal').modal('toggle')
+                              .on('hidden.bs.modal', function(){
+                              $('#modal').empty()
+                });
+                console.log('after')
+    }
+        });
+
+
+    })
+            .on('click', 'button#exit', function(){
+                $('#damodal').modal('toggle')
+                              .on('hidden.bs.modal', function(){
+                              $('#modal').empty()
+                });
+            })
 
  })();
 
