@@ -7,10 +7,14 @@ from bs4 import BeautifulSoup
 
 
 from requests.auth import HTTPDigestAuth
-#logdata = {'username':'hrm-talent-lab-laura', 'password':'dramblys1', 'module': 'login'}
-#r = requests.post('http://www.cvonline.lt/login',data=logdata)
-#print(r.status_code)
-#print(BeautifulSoup(r.text, 'lxml'))
+
+industries_cvo = [[' Praktika', 'p41'], [' Sezoninis darbas', 'p43'], ['Administravimas / Sekretoriavimas', 'p1'], ['Apsauga / Gelbėjimo paslaugos', 'p27'], ['Bankai / Draudimas', 'p25'], ['Elektronika / Telekomunikacijos', 'p6'], ['Energetika', 'p7'], ['Finansai / Apskaita', 'p8'], ['Gamyba / Pramonė', 'p10'], ['Informacinės technologijos', 'p11'], ['Inžinerija', 'p15'], ['Kultūra / Menas', 'p5'], ['Organizavimas / Valdymas', 'p2'], ['Pardavimai', 'p16'], ['Paslaugos', 'p18'], ['Prekyba / pirkimai / tiekimas', 'p21'], ['Rinkodara / Reklama', 'p14'], ['Savanoriškas darbas', 'p35'], ['Statyba / Nekilnojamas turtas', 'p4'], ['Sveikatos apsauga / Socialinė rūpyba', 'p9'], ['Švietimas / Mokslas', 'p22'], ['Teisė', 'p13'], ['Transportas / Logistika', 'p23'], ['Turizmas / viešbučiai / viešasis maitinimas', 'p20'], ['Valstybinis ir viešasis administravimas', 'p19'], ['Žemės ūkis / Aplinkos inžinerija', 'p17'], ['Žiniasklaida / Viešieji ryšiai', 'p12'], ['Žmogiškieji ištekliai', 'p26']]
+industries_cvo_numbers = ['p41', 'p43', 'p1', 'p27', 'p25', 'p6', 'p7', 'p8', 'p10', 'p11', 'p15', 'p5', 'p2', 'p16', 'p18', 'p21', 'p14', 'p35', 'p4', 'p9', 'p22', 'p13', 'p23', 'p20', 'p19', 'p17', 'p12', 'p26']
+
+cities_cvo = [['-', 'c0'], ['Alytaus', 'c113'], ['Kauno', 'c114'], ['Klaipėdos', 'c115'], ['Marijampolės', 'c116'], ['Panevėžio', 'c117'], ['Šiaulių', 'c118'], ['Tauragės', 'c119'], ['Telšių', 'c120'], ['Utenos', 'c121'], ['Vilniaus', 'c112']]
+cities_cvo_numbers = ['c0', 'c113', 'c114', 'c115', 'c116', 'c117', 'c118', 'c119', 'c120', 'c121', 'c112']
+experience_cvo = [['Praktika', 'pat:41'], ['Sezoninis darbas', 'pat:43'], ['Administravimas / Sekretoriavimas', 'pat:1'], ['Apsauga / Gelbėjimo paslaugos', 'pat:27'], ['Bankai / Draudimas', 'pat:25'], ['Elektronika / Telekomunikacijos', 'pat:6'], ['Energetika', 'pat:7'], ['Finansai / Apskaita', 'pat:8'], ['Gamyba / Pramonė', 'pat:10'], ['Informacinės technologijos', 'pat:11'], ['Inžinerija', 'pat:15'], ['Kultūra / Menas', 'pat:5'], ['Organizavimas / Valdymas', 'pat:2'], ['Pardavimai', 'pat:16'], ['Paslaugos', 'pat:18'], ['Prekyba / pirkimai / tiekimas', 'pat:21'], ['Rinkodara / Reklama', 'pat:14'], ['Savanoriškas darbas', 'pat:35'], ['Statyba / Nekilnojamas turtas', 'pat:4'], ['Sveikatos apsauga / Socialinė rūpyba', 'pat:9'], ['Švietimas / Mokslas', 'pat:22'], ['Teisė', 'pat:13'], ['Transportas / Logistika', 'pat:23'], ['Turizmas / viešbučiai / viešasis maitinimas', 'pat:20'], ['Valstybinis ir viešasis administravimas', 'pat:19'], ['Žemės ūkis / Aplinkos inžinerija', 'pat:17'], ['Žiniasklaida / Viešieji ryšiai', 'pat:12'], ['Žmogiškieji ištekliai', 'pat:26']]
+
 
 #######################################################################################################################
 
@@ -26,10 +30,10 @@ date_today_1 = datetime.date(date_today_0[0], date_today_0[1], date_today_0[2])
 
 
 search_data_2 = {'vaja_tagasi':1, 'otsing[toggle_show]':1, 'otsing[search_id]':1, 'valitud_change':0, 'desired_change':0, 'view_change':0, 'passiivne_change':0,'aktiivne_change':0}
-search_data_3 = {'CvList_id':0,'cvarv_cvlistis':25,'vaja_tagasi':1, 'otsing[search_id]':1, 'valitud_change':0, 'desired_change':0, 'view_change':0, 'passiivne_change':0,'aktiivne_change':0}
+search_data_3 = {'CvList_id':0,'cvarv_cvlistis':200,'vaja_tagasi':1, 'otsing[search_id]':1, 'valitud_change':0, 'desired_change':0, 'view_change':0, 'passiivne_change':0,'aktiivne_change':0}
 
 
-def func01_cvo(query_string, user,  days_limit = 5, sritis=None, city=None):
+def func01_cvo(query_string, user,  days_limit = 5, industry=None, city=None):
 
     ### links ##
     link_login = 'http://www.cvonline.lt/login'
@@ -49,25 +53,30 @@ def func01_cvo(query_string, user,  days_limit = 5, sritis=None, city=None):
     list_of_cv_links = []
     query_data = []
 
-    def get_stuff_from_db(query_data):
-        pass
 
     with requests.Session() as s:
         s.post(link_login, data=login_data)
 
+
         breakdashit = False
 
-        # add industry, so it is appended into cookies  /// sritis - neveikia jei daugiau nei 1
-        if sritis:
-            sritis_data = {'otsing[search_id]':1, 'otsing[function_ok]':1,'otsing[function_id]':12}
 
-            sritis_data['parmas1[]'] = sritis
 
-            s.post(link_search, data=search_data)
 
-        #add city.. /// daug pisalynes cia, jau veliau kai viskas veiks reiks ideti
+        #add city.. ///
         if city:
-            pass
+            city_data = {'andmed[country_id]':92, 'andmed[county_id]':city[1:], 'andmed[town_id]':0, 'otsing[search_id]':1,
+                         'otsing[function_ok]':1, 'otsing[function_id]':40}
+            s.post(link_search_2, data=city_data)
+
+
+        # add industry, so it is appended into cookies  ///
+        if industry:
+            sritis_data = "otsing[search_id]=1&otsing[function_ok]=1&otsing[function_id]=12"
+            sritis_data_n = {'parmas1[]':str(industry[0][1:]),'otsing[search_id]':1,'otsing[function_ok]':1,'otsing[function_id]':12}
+            for srt in industry:
+                sritis_data = 'parmas1[]='+str(srt[1:])+'&'+sritis_data
+            s.post(link_search_2+'?'+sritis_data)
 
 
         # 1st step
@@ -94,7 +103,7 @@ def func01_cvo(query_string, user,  days_limit = 5, sritis=None, city=None):
 
 
         if not breakdashit:
-            for page in range (2, 5):
+            for page in range (2, 50):
 
                 nav_page = s.get('http://www.cvonline.lt/iesko/adv_search.php?kartoteek=&id=&all_id=&CvList_id={}&otsitud_sona=&konto=&otsing[search_id]=1&ptutvustus=&lk={}'.format(CvList_id, page))
                 cv_info_1, breakdashit = ad_parser(nav_page, days_limit)
@@ -107,7 +116,9 @@ def func01_cvo(query_string, user,  days_limit = 5, sritis=None, city=None):
                     break
 
     search_string = query_string
-    query_data.append(['CVO', search_string])
+    search_city = find_dareal_name(city) if city else 'Visa Lietuva'
+    search_industry = find_dareal_name(industry) if industry else 'Visos sritys'
+    query_data.append(['CVO', search_string, search_city, search_industry, days_limit])
     query_data.append(list_of_cv_links)
     return query_data
 
@@ -127,9 +138,6 @@ def ad_parser(obj, days_limit=20):
             if element.text == "Pasyvusis":
                 cv_passive = True
 
-        #check if CV has info about previous experience
-        #if 'Anksčiau užimtos pareigos' in str(ad.contents[3]):
-        #    cv_has_previous_exp = True
 
         #find link to cv
         cv_link = 'http://www.cvonline.lt/' + ad.find_all('a')[-1].get('href')
@@ -148,31 +156,18 @@ def ad_parser(obj, days_limit=20):
         if how_old_is_cv > days_limit:
             breakdashit = True
 
-        #previous work experience
-        #if cv_has_previous_exp:
-        #    if not cv_passive:
-        #        experience = ad.find_all('b')[3].text
-        #    else:
-        #        experience =ad.find_all('b')[2].text
-        #else:
-        #    experience = "Not given"
 
         # all info in html
         html_info = ad.find('td', {'valign':"top", 'align':"left"})
 
 
-        cv_info_list.append([cv_link, html_info, cv_passive, False])
+        cv_info_list.append([cv_link, html_info, cv_passive, False, date_3])
 
         if breakdashit:
             break
 
     #print(cv_info_list)
     return cv_info_list, breakdashit
-
-
-
-
-#print(func01_cvo('php'))
 
 
 
@@ -185,3 +180,68 @@ def validate_cvo_login(acc, pss):
     else:
         return "True"
 
+def find_dareal_name(x):
+    indust = ''
+    if x[0] == 'c':
+        for y in cities_cvo:
+            if y[1] == x:
+                return y[0]
+    else:
+        for z in x:
+            for y in industries_cvo:
+                if z == y[1]:
+                    indust = indust+', '+y[0]
+        return indust
+
+
+def check_cvo_follow(user, cvs):
+    """takes a list of cvs  and user object and checks if their cv update day has changed"""
+
+  ### links ##
+    link_login = 'http://www.cvonline.lt/login'
+  ### links ##
+
+    ## data ##
+    login_data = {'username': user.cvo_usr, 'password': user.cvo_pss, 'module': 'login'}
+    months = {'kovo': 3, 'gegužės': 5, 'rugsėjo': 9, 'lapkričio': 11, 'sausio': 1, 'spalio': 10, 'birželio': 6, 'rugpjūčio': 8, 'liepos': 7, 'balandžio': 4, 'gruodžio': 12, 'vasario': 2, 'April': 4, 'February': 2, 'June': 6, 'July': 7, 'May': 5, 'August': 8, 'January': 1, 'November': 11, 'March': 3, 'December': 12, 'September': 9, 'October': 10}
+    updated_cvs = []
+
+    ## data ##
+
+    with requests.Session() as s:
+        s.post(link_login, data=login_data)
+
+        for cv in cvs:
+
+            link = s.get(cv.url)
+            link_soup = BeautifulSoup(link.text, 'lxml')
+            date_1 = link_soup.find('table', class_="top_inf").find('td', align="center").next.text.split(':')[1].split(' ')
+            date_2 = datetime.date(int(date_1[3]), months[date_1[2]], int(date_1[1][:2]))
+            if date_2 > cv.date_edited:
+                updated_cvs.append([cv, date_2])
+    print("Updated CV CVO: {}".format(updated_cvs))
+    return updated_cvs
+
+def parse_for_cats_cvo(user, url):
+    link_login = 'http://www.cvonline.lt/login'
+    login_data = {'username': user.cvo_usr, 'password': user.cvo_pss, 'module': 'login'}
+    with requests.Session() as s:
+        s.post(link_login, data=login_data)
+        link = s.get(url)
+        soup = BeautifulSoup(link.text, 'lxml')
+        personal_data = soup.find('table', class_="CvVormTable")
+        personal_data_list = [x.text for x in personal_data.find_all('td')]
+        first_name, last_name, phone, email = "Vardas", "Pavarde", "123456789", "mail@mail.com"
+        for y, x in enumerate(personal_data_list):
+            if x == "Vardas:" or x == "Name":
+                try:
+                    first_name, last_name = personal_data_list[y+1].split(' ')[0], personal_data_list[y+1].split(' ')[1]
+                except Exception as e:
+                    print(e)
+            if x == "El. paštas:":
+                email = personal_data_list[y+1]
+            if x == "Kontaktinis telefonas:":
+                phone = personal_data_list[y+1]
+        with open('cvtest.html', 'wb') as j:
+            j.write(link.content)
+        return first_name, last_name, phone, email

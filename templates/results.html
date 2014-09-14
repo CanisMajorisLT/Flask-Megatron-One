@@ -1,45 +1,71 @@
-{% block results %}
- <table data-query_id="{{ query_id }}" class="table">
+
+
+  <div class="tab-content">
+
+
+
  {% for cv in queries_data %}
-     {% set firstloop = loop %}
+    {% set firstloop = loop %}
+     {% if cv[0][0] == "CVB" %}
+<div class="tab-pane active" id="cvb-r">
+ <table id="table-cvb " data-query_id="{{ query_id }}" class="table table-hover table-responsive" cellspacing="0" width="100%">
       <thead>
         <tr>
           <th>#</th>
-          <th>CV Link {{ cv[0] }}</th>
+          <th>CV Link</th>
+          <th>Date edited</th>
           <th><button class="btn btn-default btn-sm hideviews">Viewed</button></th>
+          <th><button class="btn btn-default btn-sm hidefollow">Follow</button></th>
           <th>Save</th>
-          <th>Follow</th>
         </tr>
       </thead>
 
      <tbody>
-     {% if cv[0][0] == 'CVB' %}
+     {% for cvs in (cv[1]) %}
+        <tr data-id="{{ cvs[5] }}" >
+          <td>{{ loop.index }} <i class="{% if cvs[7]%} fa fa-exclamation {% endif %}"></i></td>
+          <td data-id="{{ cvs[5] }}" data-box="{{ firstloop.index }}{{ loop.index }}" class="{{ firstloop.index }}{{ loop.index }} cvlink {% if cvs[3] == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cvs[1] }}" data-html="true" target="_blank" href="{{ cvs[0] }}">{{ cvs[0][10:50] }}</a></td>
+          <td>{% if not search %}{{ cvs[8].strftime("%Y-%m-%d") }} {% else %} {{ cvs[8] }} {% endif %}</td>
+          <td><input data-id="{{ cvs[5] }}" class="cvread"  type="checkbox" name="{{ firstloop.index }}{{ loop.index }}" {% if cvs[3] == True %} checked {% endif %}/></td>
+          <td><input data-id="{{ cvs[5] }}" class="checkbox cvfollow {% if cvs[4] == True %} following {% endif %}" type="checkbox" {% if cvs[4] == True %} checked {% endif %}/></td>
+          <td><button data-id="{{ cvs[5] }}" class="btn btn-default btn-xs" data-md="true"><i class="fa {% if cvs[6] == True %} fa-database {% else %} fa-save {% endif %} fa-2x"></i></button></td>
+        </tr>
+        {% endfor %}
+     </tbody>
+</table>
+</div>
+         {% else %}
+<div class="tab-pane {% if loop.index == 1 %} active {% endif %}" id="cvo-r">
+  <table id="table-cvo" data-query_id="{{ query_id }}" class="table table-hover table-responsive" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>CV Link</th>
+          <th>Date edited</th>
+          <th><button class="btn btn-default btn-sm hideviews">Viewed</button></th>
+          <th><button class="btn btn-default btn-sm hidefollow">Follow</button></th>
+          <th>Save</th>
+        </tr>
+      </thead>
+
+     <tbody>
      {% for cvs in (cv[1]) %}
         <tr data-id="{{ cvs[5] }}">
-          <td>{{ loop.index }} {% if cvs[7] %}!{% endif %}</td>
-          <td data-id="{{ cvs[5] }}" data-box="{{ firstloop.index }}{{ loop.index }}" class="{{ firstloop.index }}{{ loop.index }}  {% if cvs[3] == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cvs[1] }}" data-html="true" target="_blank" href="{{ cvs[0] }}">{{ cvs[0] }}</a></td>
+          <td>{{ loop.index }} <i class="{% if cvs[7]%} fa fa-exclamation {% endif %}"></i></td>
+          <td data-id="{{ cvs[5] }}" data-box="{{ firstloop.index }}{{ loop.index }}" class="{{ firstloop.index }}{{ loop.index }} cvlink {% if cvs[3] == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cvs[1] }}" data-html="true" target="_blank" href="{{ cvs[0] }}">{{ cvs[0][10:50] }}</a></td>
+          <td>{% if not search %}{{ cvs[8].strftime("%Y-%m-%d") }} {% else %} {{ cvs[8] }} {% endif %}</td>
           <td><input data-id="{{ cvs[5] }}" class="cvread"  type="checkbox" name="{{ firstloop.index }}{{ loop.index }}" {% if cvs[3] == True %} checked {% endif %}/></td>
-          <td><button data-id="{{ cvs[5] }}" class="btn btn-primary btn-sm" data-md="true" {% if cvs[6] == True %} checked {% endif %}></button></td>
           <td><input data-id="{{ cvs[5] }}" class="checkbox cvfollow {% if cvs[4] == True %} following {% endif %}" type="checkbox" {% if cvs[4] == True %} checked {% endif %}/></td>
+          <td><button data-id="{{ cvs[5] }}" class="btn btn-default btn-xs" data-md="true" {% if cvs[6] == True %} checked {% endif %}><i class="fa fa-save fa-2x"></i></button></td>
         </tr>
         {% endfor %}
-     {% else %}
-     {% for cvs in cv[1] %}
-        <tr data-id="{{ cvs[5] }}">
-          <td>{{ loop.index }}</td>
-          <td data-id="{{ cvs[5] }}" data-box="{{ firstloop.index }}{{ loop.index }}" class="{{ firstloop.index }}{{ loop.index }} {% if cvs[3] == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cvs[1] }}" data-html="true" target="_blank" href="{{ cvs[0] }}">{{ cvs[0] }}</a></td>
-          <td><input data-id="{{ cvs[5] }}" class="cvread "  type="checkbox" name="{{ firstloop.index }}{{ loop.index }}" {% if cvs[3] == True %} checked {% endif %}/></td>
-          <td><input data-id="{{ cvs[5] }}" class="cvsave "  type="checkbox" {% if cvs[6] == True %} checked {% endif %}/></td>
-          <td><input data-id="{{ cvs[5] }}" class="checkbox cvfollow {% if cvs[4] == True %} following {% endif %}" type="checkbox" {% if cvs[4] == True %} checked {% endif %} /></td>
-        </tr>
-        {% endfor %}
-     {% endif %}
      </tbody>
-    {% endfor %}
+</table>
+</div>
+{% endif %}
+      {% endfor %}
 
- </table>
-
-
+ </div>
 
     <script>
 
@@ -53,12 +79,27 @@
 
         $('.hideviews').on('click', function(){
             var cvs = $('td.cvcheck').parent();
+
             if (cvs.hasClass('hidden')){
                 cvs.removeClass('hidden')
                    .fadeIn()
             }
             else {
                cvs.hide()
+                  .addClass('hidden')
+            }
+
+        });
+
+        $('.hidefollow').on('click', function(){
+            var cvs = $('input.cvfollow').not('.following').parent().parent();
+            console.log(cvs);
+            if (cvs.hasClass('hidden')){
+                cvs.removeClass('hidden')
+                   .fadeIn()
+            }
+            else {
+               cvs.not('.cv').hide()
                   .addClass('hidden')
             }
 
@@ -71,12 +112,10 @@
     });
 
 
-
     </script>
 
 
 
 
-{% endblock %}
 
 

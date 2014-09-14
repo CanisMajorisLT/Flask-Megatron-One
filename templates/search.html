@@ -1,31 +1,60 @@
-<div class="form-inline bg-success " id="outer">
+<div class="row margintop20">
+<div class="col-md-2"></div>
+<div class="col-md-8 form-inline bg-success border-radius" id="outer">
 
-        <form id="search" method="post" action="{{ url_for('main') }}">
-
-
-            <div class="btn-group">
-              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="Location">{{ Location }} <span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                    {% for city in cities %}
-                  <li><input type="checkbox" id="{{ city }}" name='{{ city }}'><label for="{{ city }}">{{ city }}</label></li>
-                    {% endfor %}
-
-                        <!-- Other items -->
-                </ul>
-            </div>
+        <form id="{{ id }}" method="post" action="{{ url_for('main') }}">
 
 
+          <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="false">{{ Location }} <span class="caret"></span></button>
+                <ul id="nigga" class="dropdown-menu">
 
-            <div class="btn-group">
-              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="Industry">{{ Industry }} <span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                   {% for industry in industries %}
-                  <li><input type="checkbox" id="{{ industry }}" name='{{ industry }}'><label for="{{ industry }}">{{ industry }}</label></li>
+                    <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Bankas: <span data-label-placement="">all</span></a>
+                        <ul class="dropdown-menu">
+                   {% for city in cities_cvb %}
+                  <li><input tabindex="-1" type="checkbox" id="{{ city }}" name='{{ city }}' {% if city in selected_cities %}checked disabled="disabled" {% endif %}><label for="{{ city }}">{{ city }}</label></li>
                    {% endfor %}
+                        </ul>
+                  </li>
+
+                  <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Online: <span data-label-placement="">all</span></a>
+                        <ul class="dropdown-menu">
+                   {% for city in cities_cvo %}
+                  <li><input tabindex="-1" type="checkbox" id="{{ city[1] }}" name='{{ city[1] }}' {% if city[1] in selected_cities %}checked disabled="disabled"{% endif %}><label for="{{ city[1] }}">{{ city[0] }}</label></li>
+                   {% endfor %}
+                        </ul>
+                  </li>
 
                         <!-- Other items -->
                 </ul>
             </div>
+
+
+
+            <div class="btn-group">
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="false">{{ Industry }} <span class="caret"></span></button>
+                <ul id="nigga2" class="dropdown-menu">
+
+                  <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Bankas: <span data-label-placement="">all</span></a>
+                        <ul class="dropdown-menu">
+                   {% for industry in industries_cvb %}
+                  <li><input tabindex="-1" type="checkbox" id="{{ industry }}" name='{{ industry }}' {% if industry in selected_industries %}checked disabled="disabled" {% endif %}><label for="{{ industry }}">{{ industry }}</label></li>
+                   {% endfor %}
+                        </ul>
+                  </li>
+
+                  <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Online: <span data-label-placement="">all</span></a>
+                        <ul class="dropdown-menu">
+                   {% for industry in industries_cvo %}
+                  <li><input tabindex="-1" type="checkbox" id="{{ industry[1] }}" name='{{ industry[1] }}' {% if industry[1] in selected_industries %}checked disabled="disabled" {% endif %}><label for="{{ industry[1] }}">{{ industry[0] }}</label></li>
+                   {% endfor %}
+                        </ul>
+                  </li>
+
+                        <!-- Other items -->
+                </ul>
+            </div>
+
 
 
             <div class="btn-group">
@@ -39,11 +68,10 @@
 
 
 
-            <div class="btn-group">
+            <div class="btn-group display-none">
               <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="More options">{{ More_options }} <span class="caret"></span></button>
                 <ul class="dropdown-menu">
-                  <li><input type="checkbox" id="belekas" name="belekas"><label for="belekas">belekas</label></li>
-                  <li><input type="checkbox" id="belekas" name="belekas"><label for="belekas">Darbo patirties sritis></label></li>
+                  <li><input type="checkbox" id="belekas" name="belekas"><label for="belekas">Option 1</label></li>
 
 
                 </ul>
@@ -54,12 +82,12 @@
 
 
             <div class="input-group">
-                <input type=text class="form-control" placeholder={{ Keywords }} name=kwrds required>
+                <input id="kwrds" type=text class="form-control" placeholder={{ Keywords }} name=kwrds required>
             </div>
 
 
             <div class="input-group">
-                <input type="number" class="form-control" placeholder={{ cvold }} name="CVold" id="cvold">
+                <input type="number" class="form-control moda" placeholder={{ cvold }} name="CVold" id="cvold">
             </div>
 
 
@@ -67,13 +95,31 @@
 
 
         </form>
-
-<br>
-
+</div>
+<div class="col-md-1"></div>
 </div>
 
-<div id="wrap">{{ results | safe }}</div>
-
+<div class="row">
+    <div class="col-md-2"></div>
+<div class="col-md-8 bg-success border-radius" id="wrap" hidden="hidden">{{ results | safe }}</div>
+    <div class="col-md-1 cv-tabs" hidden="hidden">
+  <!-- Nav tabs -->
+  <ul id="result-tab" class="nav nav-tabs tabs-right sideways">
+      {% if "cvb-r" in results and "cvo-r" not in results %}
+    <li class="active"><a href="#cvb-r" data-toggle="tab">CV Bankas</a></li>
+      {% elif "cvo-r" in results and "cvb-r" not in results %}
+    <li class="active"><a id="cvo-r" href="#cvo-r" data-toggle="tab">CV Online</a></li>
+      {% elif "cvo-r" in results and "cvb-r" in results %}
+    <li class="active"><a href="#cvb-r" data-toggle="tab">CV Bankas</a></li>
+    <li><a id="cvo-r" href="#cvo-r" data-toggle="tab">CV Online</a></li>
+      {% endif %}
+      {% if justsearch == True %}
+               <li class="active"><a href="#cvb-r" data-toggle="tab">CV Bankas</a></li>
+               <li><a id="cvo-r" href="#cvo-r" data-toggle="tab">CV Online</a></li>
+      {% endif %}
+  </ul>
+</div>
+</div>
 <script>
     {{ noice_js | safe }}
 </script>

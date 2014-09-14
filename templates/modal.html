@@ -5,19 +5,21 @@
         <form id="modalcontent" action="/">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">Add candidate to catsone</h4>
+          <h4 class="modal-title" id="myModalLabel"><strong>Add candidate to Catsone</strong> </h4>
         </div>
         <div class="modal-body">
 
-<div class="container">
     <div class="row">
-        <div class="col-md-offset-3 col-md-5">
+    <div class="col-md-4">
+                    <label class=" control-label">Job order(s) (optional)</label>
+    </div>
+        <div class="col-md-6">
 
             <div class="btn-group">
-              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary moda"  data-placeholder="Job order(s)">Job order(s)<span class="caret"></span></button>
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary moda"  data-placeholder="Job order(s)">Job order(s) <span class="caret"></span></button>
                 <ul class="dropdown-menu">
                    {% for job in joborders %}
-                  <li><input type="checkbox" id="{{ job[1] }}" name='{{ job[1] }}'><label for="{{ job[1] }}">{{ job[0] }}</label></li>
+                  <li><input type="radio" id="{{ job[1] }}" name='jobs'><label for="{{ job[1] }}">{{ job[0] }}</label></li>
                    {% endfor %}
 
                         <!-- Other items -->
@@ -25,16 +27,20 @@
             </div>
 
             </div>
+            <div class="col-md-2"></div>
         </div>
-    </div>
+            <br/>
     <div class="row">
-        <div class="col-md-offset-3 col-md-5">
+    <div class="col-md-4">
+                    <label class=" control-label" for="textarea">List(s) (optional)</label>
+    </div>
+        <div class="col-md-6">
 
             <div class="btn-group">
-              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary moda"  data-placeholder="Lists">Lists<span class="caret"></span></button>
+              <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary moda"  data-placeholder="Lists">Lists <span class="caret"></span></button>
                 <ul class="dropdown-menu">
                    {% for list in lists %}
-                  <li><input type="checkbox" id="{{ list[1] }}" name='{{ list[1] }}'><label for="{{ list[1] }}">{{ list[0] }}</label></li>
+                  <li><input type="radio" id="{{ list[1] }}" name='lists'><label for="{{ list[1] }}">{{ list[0] }}</label></li>
                    {% endfor %}
 
                         <!-- Other items -->
@@ -42,26 +48,24 @@
             </div>
 
         </div>
+        <div class="col-md-2"></div>
     </div>
+            <br/>
     <div class="row">
-        <div class="col-md-5">
-
-            <!-- Textarea -->
-            <div class="form-group">
-              <label class="col-md-4 control-label" for="textarea">Text Area</label>
-              <div class="col-md-4">
-                <textarea class="form-control moda" id="textarea" name="textarea">default text</textarea>
-              </div>
-            </div>
-
+        <div class="col-md-4">
+            <label class=" control-label" for="textarea">Notes (optional)</label>
         </div>
+           <div class="col-md-6">
+                <textarea class="form-control moda" id="textarea" name="textarea"></textarea>
+           </div>
+        <div class="col-md-2"></div>
     </div>
 </div>
 
 
         <div class="modal-footer">
           <button id="exit" type="button" class="btn btn-default">Close</button>
-          <button data-id="{{ cv_id }}" id="submitmodal" type="button" class="btn btn-primary" >Save</button>
+          <button data-id="{{ cv_id }}" data-loading-text="Loading..." id="submitmodal" type="button" class="btn btn-primary" >Save</button>
         </div>
        </form>
       </div><!-- /.modal-content -->
