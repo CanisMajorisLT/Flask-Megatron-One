@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="312648389">
+    <data-source source="LOCAL" name="SQLite -" uuid="f3cce26b-0e81-4348-a738-8e759e8f4624">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:B:\Projects\Flask-Megatron-One\Database7.db</jdbc-url>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+

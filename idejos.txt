@@ -1,0 +1,8 @@
+Megatron-One:
+
+kokiu funkcijø ið jo noriu:
+* kad informuotu mane apie naujus CV pagal tam tikrà uþklausà
+*leistu lengvai sudaryti paieðkas pagal miestà, sritá, keywordà, cv senumà -> tai sukurtu tokisu nodus, kurie butu pririðti prie acc ir automatiðkai kasdien patikrintu ar nera tame naude nauju cv/redaguotu
+*apjungtu tiek cvo, tiek cvb ir ateity linkedina
+*leistø iðsaugoti tiesiai á CATS
+

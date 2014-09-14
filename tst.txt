@@ -1,0 +1,84 @@
+
+### 1 etapas ###
+otsing[par1]:java > keywordas
+otsing[par2]:AND arba NOT> turi bûti þodis CV neturi bûti.
+otsing[search_id]: 1 > (bûna ið pradþiø 1, bet gal anteam etape patampa 2?
+"otsing[function_ok]": 1 > neaiðku, kà reiðkia.
+otsing[function_id]:query
+
+## 2 etapas ##
+otsing[toggle_show]:1 > èia checkbox
+otsing[search_id]:1
+vaja_tagasi:1
+valitud_change:0
+aktiivne_change:0
+passiivne_change:0
+view_change:0
+desired_change:0
+valitud_change:0
+
+## 3 etapas ##
+cvarv_cvlistis: 25, 50.. 200 > kas 25
+peida_passiivne: 1 > paslëpti pasyvius
+
+
+##
+
+parmas1[]:11
+
+##
+
+___________________
+aktiivne_change:0
+passiivne_change:0
+view_change:0
+desired_change:0
+valitud_change:0
+vaja_tagasi:1
+CvList_id:18709145
+otsing[search_id]:1
+cvarv_cvlistis:200
+
+
+parmas1[]:7 > kai dauiau sriciu, tiesiog dar priseda daugiau tu parmas..
+otsing[search_id]:1
+otsing[function_ok]:1
+otsing[function_id]:12
+
+
+kai su sritis 1 zingsns:
+
+otsing[par1]:java
+otsing[par2]:AND
+step[1]:1 n
+otsing[search_id]:1
+otsing[function_ok]:1
+otsing[steplist]:1 n
+otsing[function_id]:query
+
+
+antras zingsis jau indetiskas kaip ir be srities (ne cia turbut del to kad atsiranda cvlist id)
+....
+
+
+kai su gyvenama vieta:
+
+andmed[country_id]:92 
+andmed[county_id]:116
+andmed[town_id]:0
+otsing[search_id]:1
+otsing[function_ok]:1
+otsing[function_id]:40
+
+
+pirmas zin gsnis:
+otsing[par1]:java
+otsing[par2]:AND
+step[1]:1 n
+otsing[search_id]:3
+otsing[function_ok]:1
+otsing[steplist]:1 n
+otsing[function_id]:query
+
+
+tai, kriteriju pridejims turi eiti paeiliui, paskuij jie i cookies isimeta
