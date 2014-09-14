@@ -1,14 +1,14 @@
-
-<div id="settings" class="col-md-offset-3 col-md-5">
+<div class="container">
+<div id="settings" class="col-md-offset-3 col-md-6 margintop20">
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
-  <li class="active"><a href="#cvb" role="tab" data-toggle="tab">CV Bankas</a></li>
-  <li><a href="#cvo" role="tab" data-toggle="tab">CV Online</a></li>
-  <li><a href="#messages" role="tab" data-toggle="tab">Linkedin</a></li>
+  <li class="active"><a class="tab-back" href="#cvb" role="tab" data-toggle="tab">CV Bankas</a></li>
+  <li><a class="tab-back" href="#cvo" role="tab" data-toggle="tab">CV Online</a></li>
+  <li><a class="tab-back" href="#messages" role="tab" data-toggle="tab">Catsone</a></li>
 </ul>
 
 <!-- Tab panes -->
-<div class="tab-content">
+<div class="tab-content settings">
   <div class="tab-pane fade in active" id="cvb">
 
        <div class="row">
@@ -68,10 +68,33 @@
                                     </div>
 
   </div>
-  <div class="tab-pane fade" id="messages">Soon</div>
-</div>
-</div>
+  <div class="tab-pane fade" id="messages">
 
+       <div class="row">
+                                    <div class="col-md-6 col-md-offset-3">
+                                    <form class="cats" id="profileForm">
+                                        <input class="hidden" name="website" type="text" value="catsone"/>
+                                        <div class="form-group">
+                                            <label>Catsone API Key</label>
+                                            <input type="text" class="form-control" name="cats" value="{{ cats_api_key }}"/>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                        <button class="btn btn-default" type="submit">Save</button>
+                                            </div>
+                                            <div class="col-md-9">
+                                        <div id="success-cats" class="alert alert-success hidden" role="alert">Success!</div>
+                                        <div id="warning-cats" class="alert alert-warning hidden" role="alert">Invalid :(</div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    </div>
+                                    </div>
+
+  </div>
+</div>
+</div>
+</div>
 
 <script>
 
@@ -168,7 +191,7 @@ $(document).ready(function() {
                         if (result.response == 'True') {
                             $('#success-cvo').removeClass('hidden')                        }
                         else {
-                            $('#warning-cvo').removeClass('hidden')
+                            $('#warning-cvo').removeClass('hidden');
                         }
 
             }
@@ -176,6 +199,47 @@ $(document).ready(function() {
         })
 });
 
+$(document).ready(function() {
+    $('.cats')
+       .bootstrapValidator({
+        message: 'lulwut',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            cats: {
+                validators: {
+                    notEmpty: {
+                        message: 'Username is required'
+                    }
+                }
+            },
+            website: {}
+        }
+    })
+    .on('success.form.bv', function(e) {
+                e.preventDefault();
+                $this = $(this);
+                console.log($this);
+                $.ajax({
+                    type:"POST",
+                    encoding:"UTF-8",
+                    url: "{{ url_for('settings') }}",
+                    data: JSON.stringify($this.serialize()),
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function(result) {
+                        if (result.response == 'True') {
+                            $('#success-cats').removeClass('hidden')                        }
+                        else {
+                            $('#warning-cats').removeClass('hidden');
 
+                        }
+
+            }
+                });
+        })
+});
 
 </script>

@@ -1,3 +1,3 @@
 {% for q in queries %}
-    <li><a class="existing_queries" id="{{ q.id }}" href="?query={{ q.id }}">{{ q.date_added.strftime("%Y-%m-%d") }} <b>{{ q.kwrds }}</b> {{ q.city }} {{ q.industry }}</a></li>
+    <li><a class="existing_queries" id="{{ q.id }}" href="?query={{ q.id }}"><i data-html="true" class="fa fa-ban text-warning" data-container="body" data-toggle="popover" data-placement="right"  data-content="<p>Are you sure you want to remove this?</p><button data-id = {{ q.id }} id='queryremove' class='btn btn-default'>Yes</button><button id='close-popover' class='btn btn-default'>No</button>"></i> {{ q.date_added.strftime("%Y-%m-%d") }} <b>{{ q.kwrds }}</b> {{ q.city }} {{ q.industry }}</a></li>
 {% endfor %}
