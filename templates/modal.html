@@ -19,7 +19,7 @@
               <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary moda"  data-placeholder="Job order(s)">Job order(s) <span class="caret"></span></button>
                 <ul class="dropdown-menu">
                    {% for job in joborders %}
-                  <li><input type="radio" id="{{ job[1] }}" name='jobs'><label for="{{ job[1] }}">{{ job[0] }}</label></li>
+                  <li><input type="radio" id="{{ job[1] }}" name='{{ job[1] }}'><label for="{{ job[1] }}">{{ job[0] }}</label></li>
                    {% endfor %}
 
                         <!-- Other items -->
@@ -40,7 +40,7 @@
               <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary moda"  data-placeholder="Lists">Lists <span class="caret"></span></button>
                 <ul class="dropdown-menu">
                    {% for list in lists %}
-                  <li><input type="radio" id="{{ list[1] }}" name='lists'><label for="{{ list[1] }}">{{ list[0] }}</label></li>
+                  <li><input type="radio" id="{{ list[1] }}" name={{ list[1] }}><label for="{{ list[1] }}">{{ list[0] }}</label></li>
                    {% endfor %}
 
                         <!-- Other items -->

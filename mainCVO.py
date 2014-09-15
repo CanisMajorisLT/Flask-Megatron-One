@@ -233,14 +233,14 @@ def parse_for_cats_cvo(user, url):
         personal_data_list = [x.text for x in personal_data.find_all('td')]
         first_name, last_name, phone, email = "Vardas", "Pavarde", "123456789", "mail@mail.com"
         for y, x in enumerate(personal_data_list):
-            if x == "Vardas:" or x == "Name":
+            if x == "Vardas:" or x == "Name:":
                 try:
                     first_name, last_name = personal_data_list[y+1].split(' ')[0], personal_data_list[y+1].split(' ')[1]
                 except Exception as e:
                     print(e)
-            if x == "El. paštas:":
+            if x == "El. paštas:" or x == "E-mail:":
                 email = personal_data_list[y+1]
-            if x == "Kontaktinis telefonas:":
+            if x == "Kontaktinis telefonas:" or x == 'Contact telephone:':
                 phone = personal_data_list[y+1]
         with open('cvtest.html', 'wb') as j:
             j.write(link.content)

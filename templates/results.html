@@ -23,10 +23,10 @@
      <tbody>
      {% for cvs in (cv[1]) %}
         <tr data-id="{{ cvs[5] }}" >
-          <td>{{ loop.index }} <i class="{% if cvs[7]%} fa fa-exclamation {% endif %}"></i></td>
-          <td data-id="{{ cvs[5] }}" data-box="{{ firstloop.index }}{{ loop.index }}" class="{{ firstloop.index }}{{ loop.index }} cvlink {% if cvs[3] == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cvs[1] }}" data-html="true" target="_blank" href="{{ cvs[0] }}">{{ cvs[0][10:50] }}</a></td>
+          <td>{{ loop.index }} <i data-toggle="tooltip" title="HOT" class="{% if cvs[7]%} fa fa-exclamation {% endif %} {% if cvs[2] %} fa fa-lock {% endif %}"></i></td>
+          <td data-id="{{ cvs[5] }}" data-box="{{ firstloop.index }}{{ loop.index }}" class="{{ firstloop.index }}{{ loop.index }} cvlink {% if cvs[3] == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cvs[1] }}" data-html="true" target="_blank" href="{{ cvs[0] }}">{{ cvs[0][42:66] }}</a></td>
           <td>{% if not search %}{{ cvs[8].strftime("%Y-%m-%d") }} {% else %} {{ cvs[8] }} {% endif %}</td>
-          <td><input data-id="{{ cvs[5] }}" class="cvread"  type="checkbox" name="{{ firstloop.index }}{{ loop.index }}" {% if cvs[3] == True %} checked {% endif %}/></td>
+          <td><input data-id="{{ cvs[5] }}" class="cvread {{ firstloop.index }}{{ loop.index }}"  type="checkbox" name="{{ firstloop.index }}{{ loop.index }}" {% if cvs[3] == True %} checked {% endif %}/></td>
           <td><input data-id="{{ cvs[5] }}" class="checkbox cvfollow {% if cvs[4] == True %} following {% endif %}" type="checkbox" {% if cvs[4] == True %} checked {% endif %}/></td>
           <td><button data-id="{{ cvs[5] }}" class="btn btn-default btn-xs" data-md="true"><i class="fa {% if cvs[6] == True %} fa-database {% else %} fa-save {% endif %} fa-2x"></i></button></td>
         </tr>
@@ -51,10 +51,10 @@
      <tbody>
      {% for cvs in (cv[1]) %}
         <tr data-id="{{ cvs[5] }}">
-          <td>{{ loop.index }} <i class="{% if cvs[7]%} fa fa-exclamation {% endif %}"></i></td>
-          <td data-id="{{ cvs[5] }}" data-box="{{ firstloop.index }}{{ loop.index }}" class="{{ firstloop.index }}{{ loop.index }} cvlink {% if cvs[3] == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cvs[1] }}" data-html="true" target="_blank" href="{{ cvs[0] }}">{{ cvs[0][10:50] }}</a></td>
+          <td>{{ loop.index }} <i data-toggle="tooltip" title="HOT" class="{% if cvs[7]%} fa fa-exclamation {% endif %} {% if cvs[2] %} fa fa-lock {% endif %}"></i></td>
+          <td data-id="{{ cvs[5] }}" data-box="{{ firstloop.index }}{{ loop.index }}" class="{{ firstloop.index }}{{ loop.index }} cvlink {% if cvs[3] == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cvs[1] }}" data-html="true" target="_blank" href="{{ cvs[0] }}">{{ cvs[0][10:40] }}</a></td>
           <td>{% if not search %}{{ cvs[8].strftime("%Y-%m-%d") }} {% else %} {{ cvs[8] }} {% endif %}</td>
-          <td><input data-id="{{ cvs[5] }}" class="cvread"  type="checkbox" name="{{ firstloop.index }}{{ loop.index }}" {% if cvs[3] == True %} checked {% endif %}/></td>
+          <td><input data-id="{{ cvs[5] }}" class="cvread {{ firstloop.index }}{{ loop.index }}"  type="checkbox" name="{{ firstloop.index }}{{ loop.index }}" {% if cvs[3] == True %} checked {% endif %}/></td>
           <td><input data-id="{{ cvs[5] }}" class="checkbox cvfollow {% if cvs[4] == True %} following {% endif %}" type="checkbox" {% if cvs[4] == True %} checked {% endif %}/></td>
           <td><button data-id="{{ cvs[5] }}" class="btn btn-default btn-xs" data-md="true" {% if cvs[6] == True %} checked {% endif %}><i class="fa fa-save fa-2x"></i></button></td>
         </tr>

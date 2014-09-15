@@ -268,7 +268,7 @@
 
     {{ noice_js | safe }}
 
-   $(document).ready(function () {
+$(document).ready(function () {
     var top = $('#hamburger').offset().top - parseFloat($('#hamburger').css('marginTop').replace(/auto/, 0));
     $(window).scroll(function (event) {
         var y = $(this).scrollTop();
@@ -321,7 +321,7 @@
         $this.mouseup(function(){
             if (!$this.parent().hasClass('cvcheck')) {
                 $this.parent().addClass('cvcheck');
-                $("input.cvread[name*='$in']".replace('$in', input)).prop('checked', true);
+                $("input.cvread."+input).prop('checked', true);
                 viewed('True', $this.text(), dataid)
             }
             else {
@@ -679,7 +679,9 @@
 
     });
 
-    $("#my-menu").mmenu()
+    $("#my-menu").mmenu({
+        slidingSubmenus: false
+    })
                 .on('closed.mm', function(){
             table.columns.adjust();
 
@@ -734,7 +736,6 @@
         $btn.button('loading');
         var cv_id = $(this).attr('data-id');
         var form_data = $('form#modalcontent').serialize();
-
         $.ajax({
             type:"POST",
             encoding:"UTF-8",
