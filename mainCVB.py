@@ -52,14 +52,12 @@ def func01_cvb(query_info, user, days_limit=19):
             breakdashit = False
             date = None
             nav = s.post(query_link.format(page_number), data=query_info)
-            print('Page number: {}'.format(page_number))
+            print('CVB Page number: {}'.format(page_number))
             soup = BeautifulSoup(nav.text, 'lxml')
             job_ads = soup.find_all('article', "list_article cv_list_article list_article_rememberable")
-            print("job Ads {}".format(job_ads))
             for ad in job_ads:
                 # checks if CV is premium
                 premium = ad.find('div', "cv_level_icon")
-                print('CVB Job Ab soup {}'.format(ad))
                 # find how many days have passed since CV was updated
                 date_1 = ad.find_all('div', 'txt_list_2')
                 for y in date_1:
@@ -72,12 +70,10 @@ def func01_cvb(query_info, user, days_limit=19):
 
                         # variable giving int of how old is cv (days)
                         how_old_is_cv = days_after_edit.days
-                        print(how_old_is_cv)
-                        print('CVO CV old {}'.format(how_old_is_cv))
 
                         # check if CV is not too old
                         if how_old_is_cv > days_limit and not premium:
-                            print('why')
+                            print('limit of days reached')
                             breakdashit = True
 
                 # find a link to CV
@@ -113,6 +109,7 @@ def func01_cvb(query_info, user, days_limit=19):
 
 def validate_cvb_login(acc, pss):
     login_data = {'uname': acc, 'pass': pss}
+    print("Validanting CVB login {}".format(login_data))
     log = requests.post('http://www.cvbankas.lt/login.php', data=login_data)
     if log.url == 'http://www.cvbankas.lt/mano-skelbimu-sarasas.html':
         return "True"

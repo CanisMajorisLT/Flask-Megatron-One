@@ -173,6 +173,7 @@ def ad_parser(obj, days_limit=20):
 
 def validate_cvo_login(acc, pss):
     login_data = {'username': acc, 'password': pss, 'module': 'login'}
+    print("Validanting CVB login {}".format(login_data))
     log = requests.post('http://www.cvonline.lt/login', data=login_data)
     if log.url == 'http://www.cvonline.lt/login':
 
