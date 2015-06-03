@@ -69,7 +69,7 @@ def recognize_dat_data_and_find_cvs(list, user, query_data=False):
 
 
     if query_data:
-        return data_of_search_queries, join_by_commas(city_cvb, city_cvo), join_by_commas(industry_cvb, industry_cvo), list['kwrds'], days_limit
+        return data_of_search_queries, join_by_commas(city_cvb, city_cvo), join_by_commas(industry_cvb, industry_cvo), list['kwrds'], days_limit, database
     else:
         return data_of_search_queries
 

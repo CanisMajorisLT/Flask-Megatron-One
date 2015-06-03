@@ -24,7 +24,7 @@
                 <tbody>
                 {% for cv in data %}
                 <tr>
-                    <td>{{ loop.index }} <i class="{% if cv[0].hot %} fa fa-exclamation {% endif %}"></i></td>
+                    <td>{{ loop.index }} <i class="{% if cv[0].hot %} fa fa-exclamation {% endif %}"></i> <i class="{% if cv[0].passive %} fa fa-lock {% endif %}"></i></td>
                     <td data-id="{{ cv[0].id }}" data-box="{{ loop.index }}" class="{{ loop.index }} cvlink {% if cv[0].viewed == True %} cvcheck {% endif %}"><a class="cvurl" data-toggle="tooltip" title="{{ cv[0].short_description }}" data-html="true" target="_blank" href="{{ cv[0].url }}">{{ cv[0].url[11:50] }}</a></td>
                     <td><span data-toggle="tooltip" title="{{ cv[1] }}" >{{ cv[1][1]}}</span></td>
                     <td>{{ cv[0].date_edited.strftime("%Y-%m-%d") }}</td>

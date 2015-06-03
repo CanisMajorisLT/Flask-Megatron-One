@@ -1,4 +1,14 @@
-<div class="row margintop20">
+<div class="row">
+    <div class="col-md-2"></div>
+    <div id="topmid" class="col-md-8 margintop20">
+    <div class="form-inline">
+        <div id="city-show" class="form-group"></div>
+        <div id="industry-show" class="form-group"></div>
+    </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+<div class="row">
 <div class="col-md-2"></div>
 <div class="col-md-8 form-inline bg-success border-radius" id="outer">
 
@@ -12,7 +22,7 @@
                     <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Bankas: <span data-label-placement="">all</span></a>
                         <ul class="dropdown-menu">
                    {% for city in cities_cvb %}
-                  <li><input tabindex="-1" type="checkbox" id="{{ city }}" name='{{ city }}' {% if city in selected_cities %}checked disabled="disabled" {% endif %}><label for="{{ city }}">{{ city }}</label></li>
+                  <li><input data-represent="{{ city }}(CVB)" tabindex="-1" type="checkbox" id="{{ city }}" name='{{ city }}' {% if city in selected_cities %}checked disabled="disabled" {% endif %}><label for="{{ city }}">{{ city }}</label></li>
                    {% endfor %}
                         </ul>
                   </li>
@@ -20,7 +30,7 @@
                   <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Online: <span data-label-placement="">all</span></a>
                         <ul class="dropdown-menu">
                    {% for city in cities_cvo %}
-                  <li><input tabindex="-1" type="checkbox" id="{{ city[1] }}" name='{{ city[1] }}' {% if city[1] in selected_cities %}checked disabled="disabled"{% endif %}><label for="{{ city[1] }}">{{ city[0] }}</label></li>
+                  <li><input data-represent="{{ city[0] }}(CVO)" tabindex="-1" type="checkbox" id="{{ city[1] }}" name='{{ city[1] }}' {% if city[1] in selected_cities %}checked disabled="disabled"{% endif %}><label for="{{ city[1] }}">{{ city[0] }}</label></li>
                    {% endfor %}
                         </ul>
                   </li>
@@ -38,7 +48,7 @@
                   <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Bankas: <span data-label-placement="">all</span></a>
                         <ul class="dropdown-menu">
                    {% for industry in industries_cvb %}
-                  <li><input tabindex="-1" type="checkbox" id="{{ industry }}" name='{{ industry }}' {% if industry in selected_industries %}checked disabled="disabled" {% endif %}><label for="{{ industry }}">{{ industry }}</label></li>
+                  <li><input data-represent="{{ industry }}(CVB)" tabindex="-1" type="checkbox" id="{{ industry }}" name='{{ industry }}' {% if industry in selected_industries %}checked disabled="disabled" {% endif %}><label for="{{ industry }}">{{ industry }}</label></li>
                    {% endfor %}
                         </ul>
                   </li>
@@ -46,7 +56,7 @@
                   <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Online: <span data-label-placement="">all</span></a>
                         <ul class="dropdown-menu">
                    {% for industry in industries_cvo %}
-                  <li><input tabindex="-1" type="checkbox" id="{{ industry[1] }}" name='{{ industry[1] }}' {% if industry[1] in selected_industries %}checked disabled="disabled" {% endif %}><label for="{{ industry[1] }}">{{ industry[0] }}</label></li>
+                  <li><input data-represent="{{ industry[0] }}(CVO)" tabindex="-1" type="checkbox" id="{{ industry[1] }}" name='{{ industry[1] }}' {% if industry[1] in selected_industries %}checked disabled="disabled" {% endif %}><label for="{{ industry[1] }}">{{ industry[0] }}</label></li>
                    {% endfor %}
                         </ul>
                   </li>
@@ -60,8 +70,8 @@
             <div class="btn-group">
               <button data-toggle="dropdown" class="btn dropdown-toggle btn-primary"  data-placeholder="Database">{{ Database }} <span class="caret"></span></button>
                 <ul class="dropdown-menu">
-                  <li><input type="checkbox" id="c1" name="CVO"><label for="c1">CVOnline</label></li>
-                  <li><input type="checkbox" id="c2" name="CVB"><label for="c2">CVBankas</label></li>
+                  <li><input type="checkbox" id="c1" name="CVO" {% if 'CVO' in selected_portals %}checked disabled="disabled" {% endif %}><label for="c1">CVOnline</label></li>
+                  <li><input type="checkbox" id="c2" name="CVB" {% if 'CVB' in selected_portals %}checked disabled="disabled" {% endif %}><label for="c2">CVBankas</label></li>
 
                 </ul>
             </div>

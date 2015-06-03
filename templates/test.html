@@ -23,7 +23,6 @@
 <div class="makal">
 
 
-
 <div class="col-xs-3"> <!-- required for floating -->
   <!-- Nav tabs -->
   <ul class="nav nav-tabs tabs-right">
@@ -523,6 +522,7 @@
     </tbody>
 </table>
 </div>
+<table><tr><td>Laba diena, Esu personalo atrankų konsultantas ir norėčiau Jus prisijungti prie savo profesionalų tinklo LinkedIn. Net jei šiuo metu ir...</td><td>Laba diena, Esu personalo atrankų konsultantas ir norėčiau Jus prisijungti prie savo profesionalų tinklo LinkedIn. Net jei šiuo metu ir...</td></tr></table>
 <script>
 $(document).ready(function() {
     var table = $('#example').DataTable({
@@ -534,11 +534,32 @@ $(document).ready(function() {
 } );
        $(document).ready(function() {
         $('#what').keyup(function(){
+            console.log('hahahahhaha:(((((((((((((((((((')
                    var niga = $('#what').val();
                     $('.lol').val(niga);
-            $('.na').text(niga);
-        })
+            $('.na').text(niga)
+        });
+
+           $('#nope').keyup(function () {
+               console.log('hahahahhaha')
+           })
    });
+
+var keyMark = function (k) {
+    var key = k.keyCode;
+    console.log(k.target);
+    if (key === 119) {
+        console.log('you pressed W')
+    }
+
+};
+document.addEventListener('keypress', keyMark, false);
+
+window.onmouseover = function (e) {
+    console.log(e.target.className);
+};
+$(window).mouseover(function(e){console.log('L:()()(')})
+
 </script>
 
 </body>

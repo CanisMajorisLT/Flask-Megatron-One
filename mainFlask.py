@@ -8,6 +8,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user
 from flask.ext.cache import Cache
 from mainCatsone import cats_api
+from mainLinkedin import linkedin_inbox_api
 
 
 
@@ -17,16 +18,88 @@ app.config.update(dict(
     SECRET_KEY="soseceret",
     DEBUG=True,
     #DATABASE=os.path.join(app.root_path, 'schema.db')
-    SQLALCHEMY_DATABASE_URI='sqlite:///'+ os.path.join(app.root_path, 'Database7.db')
+    SQLALCHEMY_DATABASE_URI='sqlite:///'+ os.path.join(app.root_path, 'Database.db')
 ))
 
-cache = Cache(app,config={'CACHE_TYPE': 'simple'})
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 lm = LoginManager()
 lm.init_app(app)
 lm.login_view = 'login'
 
+##### linkedinapp ###########################################
+@app.route('/linkedin/openpopup')
+def open_popup():
+    user = get_user_linkedin()
+    print(user)
+    if user:
+        return jsonify({"success":user})
+    else:
+        return jsonify('')
 
+
+@app.route('/linkedin/login', methods=['POST'])
+def linkedin_login():
+    data = parse_json(request.get_json())
+    print('linkedin login{}'.format(data))
+    old_usr = linkedin_app.query.filter_by(acc=data['email']).first()
+    if old_usr is None:
+        new_user = linkedin_app(data['email'], data['password'])
+        db.session.add(new_user)
+        db.session.commit()
+    session['linked_user'] = data['email']
+    return render_template('login.html', error="Username taken")
+
+@app.route('/linkedin/logout')
+def linkedin_logout():
+    session.pop('linked_user')
+    return jsonify('')
+
+@app.route('/linkedin/parseinbox')
+def parse_inbox():
+    print('parseinbox')
+    user = get_user_linkedin()
+    print(user)
+    if user:
+        user_db = linkedin_app.query.filter_by(acc=user).first()
+        api = linkedin_inbox_api(user_db.acc, user_db.pss)
+        user_db.inbox = json.dumps(api.get_inbox())
+        db.session.add(user_db)
+        db.session.commit()
+        return jsonify({'data':'success'})
+    return jsonify({'data':'fail'})
+
+@app.route('/linkedin/getinbox')
+def get_inbox():
+    try:
+        user = session['linked_user']
+    except Exception as e:
+        return jsonify({'inbox_data':''})
+    inbox_data = linkedin_app.query.filter_by(acc=user).first()
+    return jsonify({'inbox_data': json.loads(inbox_data.inbox)['messages'], "test": render_template("test_li.html")})
+
+@app.route('/linkedin/updateinbox')
+def update_inbox():
+    user = get_user_linkedin()
+    if user:
+        user_db = linkedin_app.query.filter_by(acc=user).first()
+        api = linkedin_inbox_api(user_db.acc, user_db.pss)
+        updated_inbox = api.update_inbox(json.loads(user_db.inbox))
+        print("updated inbox{}".format(updated_inbox))
+        user_db.inbox = json.dumps(updated_inbox)
+        db.session.add(user_db)
+        db.session.commit()
+        return jsonify({'data': 'success'})
+
+
+def get_user_linkedin():
+    try:
+        user = session['linked_user']
+        print(user)
+    except Exception as e:
+        user = None
+    return user
+##### linkedinapp ###########################################
 
 @app.route('/')
 @login_required
@@ -112,7 +185,7 @@ def modal():
             cv.save_to_cats = True
             db.session.add(cv)
             db.session.commit()
-        return jsonify({'a':4})
+        return jsonify({'data': render_template('modal_feedback.html', candidate=result_candidate, job=result_job, list=result_list)})
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -128,8 +201,8 @@ def search():
         n = urllib.parse.unquote(request.get_json())
         m = dict(a.split('=') for a in n.split('&'))
         print('search {}'.format(m))
-        result, city, industry, kwrds, cvold = recognize_dat_data_and_find_cvs(m, g.user, query_data=True)
-        query_id = make_query_and_url_db_data(g.user, city, industry, kwrds, cvold, result, return_=True, search=True)
+        result, city, industry, kwrds, cvold, database = recognize_dat_data_and_find_cvs(m, g.user, query_data=True)
+        query_id = make_query_and_url_db_data(g.user, city, industry, kwrds, cvold, result, database, return_=True, search=True)
         queries_data_CVB = [['CVB']]
         queries_data_CVO = [['CVO']]
         queries_data_all = []
@@ -182,6 +255,7 @@ def display():
         latest_query = one_query
         mainpage_html_data['selected_cities'] = latest_query.city.split(',')
         mainpage_html_data['selected_industries'] = latest_query.industry.split(',')
+        mainpage_html_data['selected_portals'] = latest_query.database
         mainpage_html_data['Keywords'] = latest_query.kwrds
         mainpage_html_data['cvold'] = latest_query.cv_old
         mainpage_html_data['Search'] = 'Update'
@@ -262,8 +336,8 @@ def result():
     n = urllib.parse.unquote(request.get_json())
     m = dict(a.split('=') for a in n.split('&'))
     print('/result{}: '.format(m))
-    result, city, industry, kwrds, cvold = recognize_dat_data_and_find_cvs(m, g.user, query_data=True)
-    query_id = make_query_and_url_db_data(g.user, city, industry, kwrds, cvold, result, return_=True)
+    result, city, industry, kwrds, cvold, database = recognize_dat_data_and_find_cvs(m, g.user, query_data=True)
+    query_id = make_query_and_url_db_data(g.user, city, industry, kwrds, cvold, result, database, return_=True)
     return redirect(url_for('display', query=query_id, first=True))
 
 
@@ -378,14 +452,14 @@ def test():
 
 db = SQLAlchemy(app)
 
-def make_query_and_url_db_data(user, city, industry, kwrds, cvold, urls, query_class=None, return_=False, search=False):
+def make_query_and_url_db_data(user, city, industry, kwrds, cvold, urls, database, query_class=None, return_=False, search=False):
 
     if query_class:
         mk_qeury = query_class
     else:
         mk_qeury = Queries(city,
                            industry,
-                           kwrds,cvold,user, datetime.datetime.now())
+                           kwrds,cvold,user, datetime.datetime.now(), database)
 
     if not search:
         for cv_packet in urls:
@@ -446,6 +520,7 @@ class Queries(db.Model):
     city = db.Column(db.String)
     industry = db.Column(db.String)
     kwrds = db.Column(db.String)
+    database = db.Column(db.String)
     cv_old = db.Column(db.Integer)
     user_name = db.Column(db.String, db.ForeignKey('user.email'))
     search_data = db.Column(db.String, default='')
@@ -456,13 +531,14 @@ class Queries(db.Model):
 
     user = db.relationship('User', backref='queries')
 
-    def __init__(self, city, industry, kwrds, cv_old, user, date_parsed):
+    def __init__(self, city, industry, kwrds, cv_old, user, date_parsed, database):
         self.city = city
         self.industry = industry
         self.kwrds = kwrds
         self.cv_old = cv_old
         self.user = user
         self.date_parsed = date_parsed
+        self.database = database
 
 class Url_data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -494,6 +570,15 @@ class Url_data(db.Model):
         self.hot = hot
         self.date_edited = date_edited
 
+class linkedin_app(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    acc = db.Column(db.String)
+    pss = db.Column(db.String)
+    inbox = db.Column(db.String, default='')
+
+    def __init__(self, acc, pss):
+        self.acc = acc
+        self.pss = pss
 ############### Database#############################
 
 
@@ -592,7 +677,7 @@ def check_for_new_urls(old_urls, today_urls, query_class):
 
     make_query_and_url_db_data(User.query.filter_by(email=query_class.user_name),
                                None, None, None, None,
-                               new_links,
+                               new_links, None,
                                query_class=query_class)
 
 

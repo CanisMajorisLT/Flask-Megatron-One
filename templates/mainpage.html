@@ -39,9 +39,19 @@
 
 <div class="container">
 <div class="allcontents">
-<div class="row margintop20">
+    <div class="row ">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 margintop20">
+    <div class="form-inline">
+        <div id="city-show" class="form-group"></div>
+        <div id="industry-show" class="form-group"></div>
+    </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+<div class="row">
     <div class="col-md-2"></div>
-    <div class="col-md-8">{% if warning == '' %} <div class="alert alert-warning text-center margintop20">You don't have your settings set up!!!</div> {% endif %}</div>
+    <div id="topmid" class="col-md-8">{% if warning == '' %} <div class="alert alert-warning text-center margintop20">You don't have your settings set up!!!</div> {% endif %}</div>
     <div class="col-md-2"></div></div>
 <div class="row">
 <div class="col-md-2"></div>
@@ -57,7 +67,7 @@
                     <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Bankas: <span data-label-placement="">all</span></a>
                         <ul class="dropdown-menu">
                    {% for city in cities_cvb %}
-                  <li><input tabindex="-1" type="checkbox" id="{{ city }}" name='{{ city }}'><label for="{{ city }}">{{ city }}</label></li>
+                  <li><input data-represent="{{ city }}(CVB)" tabindex="-1" type="checkbox" id="{{ city }}" name='{{ city }}'><label for="{{ city }}">{{ city }}</label></li>
                    {% endfor %}
                         </ul>
                   </li>
@@ -65,7 +75,7 @@
                   <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Online: <span data-label-placement="">all</span></a>
                         <ul class="dropdown-menu">
                    {% for city in cities_cvo %}
-                  <li><input tabindex="-1" type="checkbox" id="{{ city[1] }}" name='{{ city[1] }}'><label for="{{ city[1] }}">{{ city[0] }}</label></li>
+                  <li><input data-represent="{{ city[0] }}(CVO)" tabindex="-1" type="checkbox" id="{{ city[1] }}" name='{{ city[1] }}'><label for="{{ city[1] }}">{{ city[0] }}</label></li>
                    {% endfor %}
                         </ul>
                   </li>
@@ -83,7 +93,7 @@
                   <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Bankas: <span data-label-placement="">all</span></a>
                         <ul class="dropdown-menu">
                    {% for industry in industries_cvb %}
-                  <li><input tabindex="-1" type="checkbox" id="{{ industry }}" name='{{ industry }}'><label for="{{ industry }}">{{ industry }}</label></li>
+                  <li><input data-represent="{{ industry }}(CVB)" tabindex="-1" type="checkbox" id="{{ industry }}" name='{{ industry }}'><label for="{{ industry }}">{{ industry }}</label></li>
                    {% endfor %}
                         </ul>
                   </li>
@@ -91,7 +101,7 @@
                   <li class="dropdown-submenu"><a href="#" tabindex="-1" data-toggle="dropdown">CV Online: <span data-label-placement="">all</span></a>
                         <ul class="dropdown-menu">
                    {% for industry in industries_cvo %}
-                  <li><input tabindex="-1" type="checkbox" id="{{ industry[1] }}" name='{{ industry[1] }}'><label for="{{ industry[1] }}">{{ industry[0] }}</label></li>
+                  <li><input data-represent="{{ industry[0] }}(CVO)" tabindex="-1" type="checkbox" id="{{ industry[1] }}" name='{{ industry[1] }}'><label for="{{ industry[1] }}">{{ industry[0] }}</label></li>
                    {% endfor %}
                         </ul>
                   </li>
@@ -226,38 +236,35 @@
 
 <div id="modal"></div>
 
-<div class="form-inline">
-    <div id="city-show" class="form-group"></div>
-    <div id="industry-show" class="form-group"></div>
-    <div  class="form-group"></div>
-</div>
+
 
 
 
 <script>
 
    $(document).ready(function() {
-       $('ul#nigga').on('click','input[type="checkbox"]', function(){
+       $('.allcontents').on('click','ul#nigga input[type="checkbox"]', function(){
            var $this = $(this);
            var div = $('#city-show');
-           var name = $this.attr('name');
+           var name = $this.attr('data-represent');
            if ($this.prop('checked')){
-               console.log(div.text());
-               var lol = "<span"+" id="+name+ ">" + name +"</span>";
+               console.log(name);
+               var lol = "<span"+" id="+ name+ ">" + name + ' '+"</span>";
                div.append(lol)
            }
            else {
+               console.log('removing'+name);
             $("span[id*='$in']".replace('$in', name)).remove()
            }
        })
    });   $(document).ready(function() {
-       $('ul#nigga2').on('click','input[type="checkbox"]', function(){
+       $('.allcontents').on('click','ul#nigga2 input[type="checkbox"]', function(){
            var $this = $(this);
            var div = $('#industry-show');
-           var name = $this.attr('name');
+           var name = $this.attr('data-represent');
            if ($this.prop('checked')){
                console.log(div.text());
-               var lol = "<span"+" id="+name+ ">" + name +"</span>";
+               var lol = "<span"+" id="+name+ ">" + name + ' '+"</span>";
                div.append(lol)
            }
            else {
@@ -283,6 +290,42 @@ $(document).ready(function () {
 
 //  CV viewed functions //
 (function(){
+    function viewed(is, id, input) {
+        $.ajax({
+            type: "POST",
+            encoding: "UTF-8",
+            url: "{{ url_for('update') }}",
+            data: JSON.stringify({'url': $('td.' + input).text(), 'viewed': is, 'id': id}),
+            contentType: 'application/json;charset=UTF-8',
+            success: function (result) {
+            }
+        });
+    }
+    var currentlyViewingId = '';
+    var currentlyViewingName = '';
+
+    $('.allcontents').on('mouseover', 'a',function(e){
+        currentlyViewingId = $(e.target.parentNode).attr('data-id');
+        currentlyViewingName = $(e.target.parentNode).attr('data-box');
+    });
+
+    $(window).on('keypress', function(e){
+        if (e.keyCode === 119) {
+            var input = currentlyViewingName;
+            var dataid = currentlyViewingId;
+
+            if ($('td.' + input).hasClass('cvcheck')) {
+                $('input.'+ input).prop('checked', false);
+                $('td.' + input).removeClass('cvcheck');
+                viewed('False', dataid, input)
+            }
+            else {
+                $('input.' + input).prop('checked', true);
+                viewed('True', dataid, input);
+                $('td.' + input).addClass('cvcheck');
+            }
+        }
+    });
 
     $('.allcontents').on('click','input.cvread', function(){
         var $this = $(this);
@@ -291,24 +334,14 @@ $(document).ready(function () {
 
         if ($('td.'+input).hasClass('cvcheck')) {
             $('td.'+input).removeClass('cvcheck');
-            viewed('False', dataid)
+            viewed('False', dataid, input)
         }
         else {
-            viewed('True', dataid);
+            viewed('True', dataid, input);
            $('td.'+input).addClass('cvcheck');
         }
 
-        function viewed(is, id){
-            $.ajax({
-            type:"POST",
-            encoding:"UTF-8",
-            url: "{{ url_for('update') }}",
-            data: JSON.stringify({'url':$('td.'+input).text(), 'viewed': is, 'id':id}),
-            contentType: 'application/json;charset=UTF-8',
-            success: function(result) {
-    }
-        });
-        }
+
     });
 
 })();
@@ -745,7 +778,8 @@ $(document).ready(function () {
             success: function(result) {
                 $('#damodal').modal('toggle')
                               .on('hidden.bs.modal', function(){
-                              $('#modal').empty()
+                $('#modal').empty();
+                $('#topmid').append(result.data)
                 });
                 console.log('after')
     }
@@ -781,8 +815,13 @@ $(document).ready(function () {
     });
     $(document).on('click', '#close-popover', function(){
         $('.fa-ban').popover('hide')
-    })
+    });
+    //$('.alert').alert()
  })();
+
+
+
+
 </script>
 
 

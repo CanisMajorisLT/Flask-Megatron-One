@@ -31,12 +31,12 @@ experience_cvb = [['Darbuotojo patirties sritis', 'pat:'], ['Administravimas/sek
 #######################################################################################################################
 
 #### make a formatted date of today ###
-date_today_0 = [int (x) for x in datetime.datetime.now().strftime("%Y-%m-%d").split('-')]
+date_today_0 = [int(x) for x in datetime.datetime.now().strftime("%Y-%m-%d").split('-')]
 date_today_1 = datetime.date(date_today_0[0], date_today_0[1], date_today_0[2])
 #### make a formatted date of today ###
 
 
-def func01_cvb(query_info, user, days_limit = 19):
+def func01_cvb(query_info, user, days_limit=19):
 
     login_link = 'http://www.cvbankas.lt/login.php'
     query_link = 'http://www.cvbankas.lt/darbuotoju-paieska?page={}#rezults_a'
@@ -51,15 +51,15 @@ def func01_cvb(query_info, user, days_limit = 19):
         for page_number in range(1, 50):
             breakdashit = False
             date = None
-            nav = s.post(query_link.format(page_number),data=query_info)
+            nav = s.post(query_link.format(page_number), data=query_info)
             print('Page number: {}'.format(page_number))
             soup = BeautifulSoup(nav.text, 'lxml')
-            job_ads = soup.find_all('article', "list_article list_article_rememberable")
-
+            job_ads = soup.find_all('article', "list_article cv_list_article list_article_rememberable")
+            print("job Ads {}".format(job_ads))
             for ad in job_ads:
                 # checks if CV is premium
                 premium = ad.find('div', "cv_level_icon")
-
+                print('CVB Job Ab soup {}'.format(ad))
                 # find how many days have passed since CV was updated
                 date_1 = ad.find_all('div', 'txt_list_2')
                 for y in date_1:
@@ -73,6 +73,7 @@ def func01_cvb(query_info, user, days_limit = 19):
                         # variable giving int of how old is cv (days)
                         how_old_is_cv = days_after_edit.days
                         print(how_old_is_cv)
+                        print('CVO CV old {}'.format(how_old_is_cv))
 
                         # check if CV is not too old
                         if how_old_is_cv > days_limit and not premium:
@@ -81,6 +82,8 @@ def func01_cvb(query_info, user, days_limit = 19):
 
                 # find a link to CV
                 cv_link = ad.find('a').get('href')
+
+                print('CVO CV Link {}'.format(cv_link))
 
                 # find some html data
                 html_data = str(ad.find('div', class_="cv_list_description txt_list_2"))+'<br/>'+str(ad.find('div', class_="txt_list_1"))
